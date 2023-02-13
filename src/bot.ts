@@ -1348,7 +1348,7 @@ export class TreasureMapBot {
 
         if (currentVersion === undefined) return true;
 
-        if (currentVersion != version) {
+        /*if (currentVersion != version) {
             const message =
                 "Please update your code version, run yarn start on your computer, and execute in your telegram /start";
 
@@ -1360,6 +1360,7 @@ export class TreasureMapBot {
             throw makeException("Version", message);
         } else {
             await this.notification.unsetUpdateVersion();
-        }
+        }*/
+        return true;
     }
 }
