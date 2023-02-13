@@ -159,17 +159,7 @@ export let socket: Socket;
 
 export const connectWebSocketAnalytics = async (bot: TreasureMapBot) => {
     //feito isso para eu saber quantas pessoas estão utilizando o bot
-    const identify = bot.getIdentify();
-    const network = bot.loginParams.rede;
-    let started = await bot.db.get("start");
-    started = started === null || started === true ? true : false;
-    socket = io("http://bombcrypto.lucasvieceli.com.br:81", {
-        query: { identify, started, network },
-    });
-
-    socket.on("message", (message: any) => {
-        bot.telegram.sendMessageChat(message);
-    });
+   
 };
 
 export const sendEventSockect = (event: string, value: any) => {
