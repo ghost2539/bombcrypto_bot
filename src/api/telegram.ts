@@ -168,7 +168,7 @@ export class Telegram {
         const getbool = (value: boolean) => (value ? "Yes" : "No");
 
         const html =
-            `Account: ${this.bot.getIdentify()}\n\n` +
+            `🔰Account: ${this.bot.getIdentify()}\n\n` +
             `<b>Network</b>: ${rede}\n` +
             `<b>Alert shield</b>: ${alertShield}\n` +
             `<b>Heroes select at home</b>: ${houseHeroes
@@ -197,7 +197,7 @@ export class Telegram {
 
         if (!this.bot.shouldRun) {
             await context.replyWithHTML(
-                `Account: ${this.bot.getIdentify()}\n\nAccount not working`
+                `🔰Account: ${this.bot.getIdentify()}\n\nAccount not working`
             );
             return;
         }
@@ -256,9 +256,9 @@ export class Telegram {
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
             `INFO: LIFE HERO | SHIELD HERO\n` +
-            `Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
-            `Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
-            `Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
+            `🗹Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
+            `🗹Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
+            `🗹Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
 
         return message;
     }
@@ -304,7 +304,7 @@ ${resultDb
             .toString()
             .padStart(2, "0")}`;
 
-        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
+        return `<b>🗹${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
     })
     .join("\n")}`;
 
