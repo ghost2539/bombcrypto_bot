@@ -243,22 +243,22 @@ export class Telegram {
         const houseHeroesIds = this.bot.houseHeroes.join(", ");
 
         const message =
-            `Account: ${this.bot.getIdentify()}\n\n` +
-            `Playing mode: ${this.bot.getStatusPlaying()}\n\n` +
+            `💣Account: ${this.bot.getIdentify()}\n\n` +
+            `🕹️Playing mode: ${this.bot.getStatusPlaying()}\n\n` +
             // `Adventure heroes: ${heroesAdventure.usedHeroes.length}/${heroesAdventure.allHeroes.length}\n` +
             // `Heroes selected for adventure: ${heroesAdventureSelected}\n` +
             msgEnemies +
-            `Network: ${this.bot.client.loginParams.rede}\n` +
+            `🌐Network: ${this.bot.client.loginParams.rede}\n` +
             `Treasure/Amazon:\n` +
             `${this.bot.map.toString()}\n` +
-            `Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
-            `Remaining chest (Amazon): \n${this.bot.map
+            `🏠Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
+            `⛏️Remaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
             `INFO: LIFE HERO | SHIELD HERO\n` +
-            `🗹Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
-            `🗹Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
-            `🗹Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
+            `🛠️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
+            `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
+            `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
 
         return message;
     }
@@ -275,9 +275,9 @@ export class Telegram {
         const resultDb = this.bot.db.getAllDatabase();
 
         const html = `
-<b>Rewards</b>
+<b>💰Rewards</b>
 
-Bcoin | Bomberman | heroes with zero shield | time last update UTC 0
+Bcoin | Jaulas | Heroes 0 shield | Time Verify UTC 0
 
 ${resultDb
     .filter((v) => v.rewards)
@@ -304,7 +304,7 @@ ${resultDb
             .toString()
             .padStart(2, "0")}`;
 
-        return `<b>🗹${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
+        return `<b>✅${username}</b>:  💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ⌚${dateStr}`;
     })
     .join("\n")}`;
 
