@@ -515,11 +515,11 @@ export class TreasureMapBot {
     async alertShieldHero(hero: Hero) {
         if (!(await this.notification.hasHeroShield(hero.id))) {
             this.telegram.sendMessageChat(
-                `🛡️Hero ${hero.id} needs shield repair`
+                `🛡️ Hero ${hero.id} needs shield repair`
             );
             this.notification.setHeroShield(hero.id, this.getSumShield(hero));
         }
-        logger.info(`🛡️Hero ${hero.id} needs shield repair`);
+        logger.info(`🛡️ Hero ${hero.id} needs shield repair`);
     }
     async alertMaterial(material: number) {
         if (!(await this.notification.hasMaterial())) {
@@ -529,7 +529,7 @@ export class TreasureMapBot {
     }
     async alertShielZerodHero(hero: Hero) {
         if (!(await this.notification.hasHeroZeroShield(hero.id))) {
-            this.telegram.sendMessageChat(`💀Hero ${hero.id} has 0 shield`);
+            this.telegram.sendMessageChat(`💀 Hero ${hero.id} has 0 shield`);
             this.notification.setHeroZeroShield(hero.id, 0);
         }
     }
