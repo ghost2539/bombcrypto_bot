@@ -282,7 +282,7 @@ export class Telegram {
         const html = `
 <b>💰Rewards</b>
 
-Bcoin | Jaulas | Heroes 💀 | Time UTC 0
+Bcoin | Jaulas | Heroes 💀 | Time
 
 ${resultDb
     .filter((v) => v.rewards)
@@ -309,7 +309,7 @@ ${resultDb
             .toString()
             .padStart(2, "0")}`;
 
-        return `<b>✅ ${username}</b>:💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ⌚${dateStr}`;
+        return `<b>▷ ${username}</b>:💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ⌚${dateStr}`;
     })
     .join("\n")}`;
 
