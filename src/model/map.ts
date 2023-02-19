@@ -305,7 +305,7 @@ export class TreasureMap {
         if (nomeItem === "Pig"){x=8};
 
         const typesItens= ["🟩","🪨","🔐","🪤","💎","🪙","💎","🔑","🐷"]
-        const tipoItem = typesItens[x];
+        const tipoItem = nomeItem; //typesItens[x];
         return tipoItem;
     }
 
