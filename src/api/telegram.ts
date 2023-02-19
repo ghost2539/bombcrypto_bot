@@ -253,9 +253,9 @@ export class Telegram {
             // `Adventure heroes: ${heroesAdventure.usedHeroes.length}/${heroesAdventure.allHeroes.length}\n` +
             // `Heroes selected for adventure: ${heroesAdventureSelected}\n` +
             msgEnemies +
-            `🌐Network: ${this.bot.client.loginParams.rede}\n` +
+            `🌐Network: ${this.bot.client.loginParams.rede}\n\n` +
             `Treasure/Amazon:\n` +
-            ` 🗺️${this.bot.map.toString()}\n\n` +
+            `- 🗺️${this.bot.map.toString()}\n\n` +
             `🏠Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
             `\nRemaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
@@ -267,7 +267,7 @@ export class Telegram {
 
         return message;
     }
-    
+
     public getTotalHeroZeroShield(database: any) {
         return Object.keys(database).filter(
             (v) => v.indexOf("heroZeroShield") !== -1
