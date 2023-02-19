@@ -1,6 +1,5 @@
 import { buildEnemy, Enemy, Hero, IEnemyParams, IStoryHeroParams } from ".";
 import { makeException } from "../err";
-import { getDurationInMilliseconds } from "../lib";
 import { IStartExplodeReward } from "../parsers";
 import { Block } from "./block";
 
@@ -293,7 +292,7 @@ export class TreasureMap {
         return `Map: ${this.totalLife}/${this.totalMaxLife}`;
     }
     //MINHAS ALTERAÇÕES - icones dos itens que estão no mapa
-    getMapItens(nomeItem){
+    getMapItens(nomeItem: string){
         let x = 0;
         if (nomeItem === "Green"){x=0};
         if (nomeItem === "Rock"){x=1};
@@ -305,8 +304,8 @@ export class TreasureMap {
         if (nomeItem === "KeyChest"){x=7};
         if (nomeItem === "Pig"){x=8};
 
-        const typesItens= ["🟩","🪨","🔐","🪤","💎","🪙","💎","🔑","🐷"]
-        const tipoItem = nomeItem; //typesItens[x];
+        const typesItens= ["🟩","🪨","🔐","🪤","💎","🪙","💎","🔑","🐷"];
+        const tipoItem = typesItens[x];
         return tipoItem;
     }
 
@@ -321,10 +320,9 @@ export class TreasureMap {
         
         
         //MINHAS ALTERAÇÕES *******************************************
-        var Item = Object.keys(blocks).map((type) => `${type}`);
-        var iconItem = this.getMapItens(Item);
+        
         return Object.keys(blocks).map(
-            (type) => `${iconItem} ${type}: ${blocks[type].length}`
+            (type) => `${(this.getMapItens(type))} ${type}: ${blocks[type].length}`
         );
     }
 }
