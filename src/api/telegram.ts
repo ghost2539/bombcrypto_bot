@@ -260,7 +260,7 @@ export class Telegram {
             `\nRemaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
-            `ℹ️INFO: 💓LIFE HERO | 🛡️SHIELD HERO\n\n` +
+            `ℹ️INFO: ⚡LIFE HERO | 🛡️SHIELD HERO\n\n` +
             `🛠️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
             `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
             `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
