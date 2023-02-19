@@ -293,17 +293,17 @@ export class TreasureMap {
         return `Map: ${this.totalLife}/${this.totalMaxLife}`;
     }
     //MINHAS ALTERAÇÕES - icones dos itens que estão no mapa
-    getMapItens(nomeItem: string[]){
+    getMapItens(nomeItem){
         let x = 0;
-        if (nomeItem == "Green"){x=0};
-        if (nomeItem == "Rock"){x=1};
-        if (nomeItem == "Cage"){x=2};
-        if (nomeItem == "WoodChest"){x=3};
-        if (nomeItem == "AmethystChest"){x=4};
-        if (nomeItem == "GoldChest"){x=5};
-        if (nomeItem == "DiamondChest"){x=6};
-        if (nomeItem == "KeyChest"){x=7};
-        if (nomeItem == "Pig"){x=8};
+        if (nomeItem === "Green"){x=0};
+        if (nomeItem === "Rock"){x=1};
+        if (nomeItem === "Cage"){x=2};
+        if (nomeItem === "WoodChest"){x=3};
+        if (nomeItem === "AmethystChest"){x=4};
+        if (nomeItem === "GoldChest"){x=5};
+        if (nomeItem === "DiamondChest"){x=6};
+        if (nomeItem === "KeyChest"){x=7};
+        if (nomeItem === "Pig"){x=8};
 
         const typesItens= ["🟩","🪨","🔐","🪤","💎","🪙","💎","🔑","🐷"]
         const tipoItem = nomeItem; //typesItens[x];
