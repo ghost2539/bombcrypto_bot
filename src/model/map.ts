@@ -320,9 +320,9 @@ export class TreasureMap {
         
         
         //MINHAS ALTERAÇÕES *******************************************
-        
+        let iconItem = '';
         return Object.keys(blocks).map(
-            (type) => `${(this.getMapItens(type))} ${type}: ${blocks[type].length}`
+            (type) => `${iconItem=this.getMapItens(type)} ${type}: ${blocks[type].length}`
         );
     }
 }
