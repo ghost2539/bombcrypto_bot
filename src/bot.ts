@@ -523,7 +523,7 @@ export class TreasureMapBot {
     }
     async alertMaterial(material: number) {
         if (!(await this.notification.hasMaterial())) {
-            this.telegram.sendMessageChat(`You need more material`);
+            this.telegram.sendMessageChat(`⚠️You need more material 🪨`);
             this.notification.setMaterial(material);
         }
     }
@@ -1121,7 +1121,7 @@ export class TreasureMapBot {
 
             this.isResettingShield = true;
             await this.telegram.sendMessageChat(
-                `Repairing shield hero ${hero.id}...`
+                `⌛Repairing shield hero ${hero.id}...`
             );
             const transaction = await this.client.web3ResetShield(hero);
             this.lastTransactionWeb3 = transaction.transactionHash;
@@ -1129,13 +1129,13 @@ export class TreasureMapBot {
             currentRock = await this.client.web3GetRock();
 
             await this.telegram.sendMessageChat(
-                `Hero ${hero.id} shield has been repaired\n\nYou have ${currentRock} of material`
+                `🛡️Hero ${hero.id} shield has been repaired\n\nYou have 🪨${currentRock} of material`
             );
             this.isResettingShield = false;
         } catch (e: any) {
             this.isResettingShield = false;
             this.telegram.sendMessageChat(
-                `Error repair shield\n\n${e.message}`
+                `❌Error repair shield\n\n${e.message}`
             );
         }
     }
