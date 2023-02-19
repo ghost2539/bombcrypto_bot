@@ -216,9 +216,13 @@ export class Telegram {
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
             if (isSelectedAtHome) {
-                return `<b>${hero.rarity} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}</b>`;
+                //MINHAS ALTERAÇÕES - COR RARIDADE
+                let corRaridade = this.getColor(hero.rarityIndex);
+                return `<b>${corRaridade} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}</b>`;
             } else {
-                return `${hero.rarity} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}`;
+                //MINHAS ALTERAÇÕES - COR RARIDADE
+                let corRaridade = this.getColor(hero.rarityIndex);
+                return `${corRaridade} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}`;
             }
         };
 
@@ -245,25 +249,25 @@ export class Telegram {
 
         const message =
             `🔰Account: ${this.bot.getIdentify()}\n\n` +
-            `🕹️Playing mode: ${this.bot.getStatusPlaying()}\n\n` +
+            `🕹️Playing mode: ${this.bot.getStatusPlaying()}\n` +
             // `Adventure heroes: ${heroesAdventure.usedHeroes.length}/${heroesAdventure.allHeroes.length}\n` +
             // `Heroes selected for adventure: ${heroesAdventureSelected}\n` +
             msgEnemies +
             `🌐Network: ${this.bot.client.loginParams.rede}\n` +
-            `🗺️Treasure/Amazon:\n` +
-            `${this.bot.map.toString()}\n` +
+            `Treasure/Amazon:\n` +
+            ` 🗺️${this.bot.map.toString()}\n\n` +
             `🏠Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
-            `⛏️Remaining chest (Amazon): \n${this.bot.map
+            `\nRemaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
-            `INFO: LIFE HERO | SHIELD HERO\n\n` +
+            `ℹ️INFO: 💓LIFE HERO | 🛡️SHIELD HERO\n\n` +
             `🛠️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
             `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
             `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
 
         return message;
     }
-
+    
     public getTotalHeroZeroShield(database: any) {
         return Object.keys(database).filter(
             (v) => v.indexOf("heroZeroShield") !== -1
@@ -420,7 +424,7 @@ ${resultDb
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
 
-                const corRaridade = this.getColor(hero.rarityIndex);
+                let corRaridade = this.getColor(hero.rarityIndex);
 
             return `${corRaridade} [${hero.id}]: ${shield}`;
         };
