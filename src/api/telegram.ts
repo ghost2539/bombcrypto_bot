@@ -309,7 +309,7 @@ ${resultDb
             .toString()
             .padStart(2, "0")}`;
 
-        return `<b>▷ ${username}</b>:💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ⌚${dateStr}`;
+        return `<b>▷ ${username}</b>:\n💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ${dateStr}`;
     })
     .join("\n")}`;
 
