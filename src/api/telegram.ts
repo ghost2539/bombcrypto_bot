@@ -505,17 +505,17 @@ ${resultDb
     }
 
     //MINHAS ALTERAÇÕES
-    getMediaDiaria(){
-        const value = await this.bot.currentCalcFarm();
-        const dateStart = value.start.date;
-        const dateEnd = value.current.date;
-        const bcoinStart = value.start.bcoin;
-        const bcoinEnd = value.current.bcoin;
-        const totalBcoin = bcoinEnd - bcoinStart;
+    async getMediaDiaria(){
+        const xvalue = await this.bot.currentCalcFarm();
+        const xdateStart = xvalue.start.date;
+        const xdateEnd = xvalue.current.date;
+        const xbcoinStart = xvalue.start.bcoin;
+        const xbcoinEnd = xvalue.current.bcoin;
+        const xtotalBcoin = xbcoinEnd - xbcoinStart;
         //const totalMap = await this.getTotalMap(dateStart);
-        const diffmin = differenceInMinutes(dateEnd, dateStart);
-        const diffHours = diffmin / 60;
-        return (totalBcoin / diffHours)*24;
+        const xdiffmin = differenceInMinutes(xdateEnd, xdateStart);
+        const xdiffHours = xdiffmin / 60;
+        return (xtotalBcoin / xdiffHours)*24;
 
     }
     async telegramStopCalcFarm(context: Context, stop = true) {
