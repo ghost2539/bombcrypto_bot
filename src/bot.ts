@@ -161,6 +161,7 @@ export class TreasureMapBot {
             numHeroWork = 15,
             server = "sea",
             telegramChatId = "",
+            rewardsAllPermission = [],
             telegramKey = "",
             identify = "",
         } = moreParams;
