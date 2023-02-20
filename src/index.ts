@@ -55,6 +55,7 @@ async function main() {
             0
         ),
         alertMaterial: askAndParseEnv("ALERT_MATERIAL", parseNumber, 0),
+        ignoreCommands: askAndParseEnv("IGNORE_COMMANDS", parseArray, []),
     });
 
     let intervalReport: NodeJS.Timer;

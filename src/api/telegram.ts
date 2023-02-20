@@ -133,7 +133,8 @@ export class Telegram {
             console.log(e);
         }
     }
-    checkChatId(context: Context, fn: any) {
+    //MINHAS ALTERAÇÕES
+    /*checkChatId(context: Context, fn: any) {
         if (this.bot.params.telegramChatId) {
             const chatId = getChatId(context);
             if (
@@ -147,7 +148,34 @@ export class Telegram {
             }
         }
         return fn(context);
-    }
+    }*/
+    checkChatId(context: Context, fn: any, command: string) {
+        const { ignoreCommands } = this.bot.params;
+        if (ignoreCommands.includes(command)) return;
+  
+        const now = Date.now() / 1000;
+        const timedelta = now - (context.message?.date || 0);
+  
+        if (timedelta >= 30) {
+           logger.info(`Ignoring message ${context.message?.message_id}`);
+           return;
+        }
+  
+        if (this.bot.params.telegramChatId) {
+           const chatId = getChatId(context);
+           if (
+              this.bot.params.telegramChatIdCheck &&
+              chatId != this.bot.params.telegramChatId
+           ) {
+              context.replyWithHTML(
+                 `Account: ${this.bot.getIdentify()}\n\nYou do not have permission. your Telegram Chat Id is different from what was informed in the settings`
+              );
+              return;
+           }
+        }
+        return fn(context);
+     }
+
     async telegramConfig(context: Context) {
         const {
             rede,

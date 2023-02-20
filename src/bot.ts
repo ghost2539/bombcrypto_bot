@@ -96,6 +96,7 @@ export interface IMoreOptions {
     adventureHeroes?: string;
     rede?: string;
     identify?: string;
+    ignoreCommands?: string[];
     version?: number;
     maxGasRepairShield?: number;
     alertMaterial?: number;
@@ -151,6 +152,7 @@ export class TreasureMapBot {
             telegramChatIdCheck = false,
             ignoreNumHeroWork = false,
             reportRewards = 0,
+            ignoreCommands = [],
             rede = "BSC",
             version = VERSION_CODE,
             alertShield = 0,
@@ -176,6 +178,7 @@ export class TreasureMapBot {
             alertShield,
             numHeroWork,
             server,
+            ignoreCommands,
             telegramChatId,
             telegramKey,
             telegramChatIdCheck,

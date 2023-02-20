@@ -15,6 +15,7 @@ import { IMoreOptions } from "../bot";
 import {
     ABI_APPROVE_CLAIM,
     ABI_RESET_SHIELD_HERO,
+    ADDRESS_BOMB,
     CONTRACT_APPROVE_CLAIM,
     CONTRACT_BOMB,
     CONTRACT_RESET_SHIELD,
