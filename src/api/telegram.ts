@@ -322,7 +322,7 @@ export class Telegram {
         const html = `
 <b>💰Rewards</b>
 
-Bcoin | Jaulas | Heroes 💀 | Time
+Bcoin | 💣Jaulas | 💀Shield | 🪨 Material | 📈 Media
 
 ${resultDb
     .filter((v) => v.rewards)
@@ -348,8 +348,11 @@ ${resultDb
             .getMinutes()
             .toString()
             .padStart(2, "0")}`;
-
-        return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 🦸${bomberman} | 💀${zeroShield} | ${dateStr}\n`;
+        
+        //minhas alterações
+        const material_maker = this.bot.client.web3GetRock();
+        const mediaDiaria = this.getMediaDiaria();
+        return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield} | 🪨${material_maker} | ${mediaDiaria}\n`;//${dateStr}\n`;
     })
     .join("\n")}`;
 
@@ -501,6 +504,20 @@ ${resultDb
         return list.filter((v) => v >= dateStart).length;
     }
 
+    //MINHAS ALTERAÇÕES
+    getMediaDiaria(){
+        const value = await this.bot.currentCalcFarm();
+        const dateStart = value.start.date;
+        const dateEnd = value.current.date;
+        const bcoinStart = value.start.bcoin;
+        const bcoinEnd = value.current.bcoin;
+        const totalBcoin = bcoinEnd - bcoinStart;
+        //const totalMap = await this.getTotalMap(dateStart);
+        const diffmin = differenceInMinutes(dateEnd, dateStart);
+        const diffHours = diffmin / 60;
+        return (totalBcoin / diffHours)*24;
+
+    }
     async telegramStopCalcFarm(context: Context, stop = true) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
