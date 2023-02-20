@@ -97,6 +97,7 @@ export interface IMoreOptions {
     rede?: string;
     identify?: string;
     ignoreCommands?: string[];
+    rewardsAllPermission?: string[];
     version?: number;
     maxGasRepairShield?: number;
     alertMaterial?: number;
@@ -184,6 +185,7 @@ export class TreasureMapBot {
             telegramKey,
             telegramChatIdCheck,
             resetShieldAuto,
+            rewardsAllPermission,
             maxGasRepairShield,
             ignoreNumHeroWork,
             alertMaterial,
