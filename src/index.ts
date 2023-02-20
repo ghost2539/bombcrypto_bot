@@ -3,6 +3,7 @@ import { VERSION_CODE } from "./constants";
 import {
     askAndParseEnv,
     identity,
+    parseArray,
     parseBoolean,
     parseLogin,
     parseNumber,
@@ -42,6 +43,11 @@ async function main() {
         numHeroWork: parseInt(askAndParseEnv("NUM_HERO_WORK", identity, "15")),
         telegramChatId: askAndParseEnv("TELEGRAM_CHAT_ID", identity, ""),
         identify: askAndParseEnv("IDENTIFY", identity, ""),
+        rewardsAllPermission: askAndParseEnv(
+            "REWARDS_ALL_PERMISSION",
+            parseArray,
+            []
+         ),
         telegramChatIdCheck: askAndParseEnv(
             "TELEGRAM_CHAT_ID_CHECK",
             parseBoolean,
