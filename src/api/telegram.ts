@@ -55,7 +55,7 @@ export class Telegram {
                 )
             );
             this.telegraf?.command("pool", (ctx) =>
-            this.checkChatId(ctx, () => this.telegramPool(ctx), "/pool")
+            this.checkChatId(ctx, () => this.telegramPool(ctx))
             );
             this.telegraf?.command("shield", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramStatsShield(ctx))
@@ -134,7 +134,7 @@ export class Telegram {
         }
     }
     //MINHAS ALTERAÇÕES
-    /*checkChatId(context: Context, fn: any) {
+    checkChatId(context: Context, fn: any) {
         if (this.bot.params.telegramChatId) {
             const chatId = getChatId(context);
             if (
@@ -148,8 +148,8 @@ export class Telegram {
             }
         }
         return fn(context);
-    }*/
-    checkChatId(context: Context, fn: any, command: string) {
+    }
+    /*checkChatId(context: Context, fn: any, command: string) {
         const { ignoreCommands } = this.bot.params;
         if (ignoreCommands.includes(command)) return;
   
@@ -174,7 +174,7 @@ export class Telegram {
            }
         }
         return fn(context);
-     }
+     }*/
 
     async telegramConfig(context: Context) {
         const {

@@ -9,6 +9,7 @@ export const LC = "";
 
 export const WEB3_RPC = "https://polygon-rpc.com";
 export const BLOCK_REWARD_TYPE_BCOIN_POLYGON = 1;
+export const ADDRESS_BOMB = "0x7e396e19322de2eda8ca300b436ed4eca955c366";
 export const CONTRACT_APPROVE_CLAIM =
     "0x83b5e78c10257bb4990eba73e00bbc20c5581745";
 export const CONTRACT_RESET_SHIELD =
