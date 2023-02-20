@@ -350,8 +350,10 @@ ${resultDb
             .padStart(2, "0")}`;
         
         //minhas alterações
-        const material_maker = this.bot.client.web3GetRock();
-        const mediaDiaria = this.getMediaDiaria(context);
+        let material_maker = await this.bot.client.web3GetRock();
+        let mediaDiaria = await this.getMediaDiaria(context);
+        if (!mediaDiaria){mediaDiaria=0};
+        if (!material_maker){material_maker=0};
         return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield} | 🪨${material_maker} | ${mediaDiaria}\n`;//${dateStr}\n`;
     })
     .join("\n")}`;
