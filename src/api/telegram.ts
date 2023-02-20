@@ -505,13 +505,18 @@ ${resultDb
     }
 
     //MINHAS ALTERAÇÕES
-    async getMediaDiaria(){
-        const xvalue = await this.bot.currentCalcFarm();
-        const xdateStart = xvalue.start.date;
-        const xdateEnd = xvalue.current.date;
-        const xbcoinStart = xvalue.start.bcoin;
-        const xbcoinEnd = xvalue.current.bcoin;
-        const xtotalBcoin = xbcoinEnd - xbcoinStart;
+    async getMediaDiaria(context:Context){
+        let value = await this.bot.currentCalcFarm();
+        if (!value) {
+            return context.replyWithHTML(
+                `🔰Account: ${this.bot.getIdentify()}\n\nFarm calculation was not previously started`
+            );
+        }
+        let xdateStart = value.start.date;
+        let xdateEnd = value.current.date;
+        let xbcoinStart = value.start.bcoin;
+        let xbcoinEnd = value.current.bcoin;
+        let xtotalBcoin = xbcoinEnd - xbcoinStart;
         //const totalMap = await this.getTotalMap(dateStart);
         const xdiffmin = differenceInMinutes(xdateEnd, xdateStart);
         const xdiffHours = xdiffmin / 60;
