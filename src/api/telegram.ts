@@ -351,7 +351,7 @@ ${resultDb
         
         //minhas alterações
         const material_maker = this.bot.client.web3GetRock();
-        const mediaDiaria = this.getMediaDiaria();
+        const mediaDiaria = this.getMediaDiaria(context);
         return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield} | 🪨${material_maker} | ${mediaDiaria}\n`;//${dateStr}\n`;
     })
     .join("\n")}`;
