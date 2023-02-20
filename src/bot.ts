@@ -1274,7 +1274,7 @@ export class TreasureMapBot {
     }
 
     notificationBlockCage() {
-        this.telegram.sendMessageChat("You won a hero");
+        this.telegram.sendMessageChat("🥳You won a hero");
     }
 
     private handleExplosion(payload: IStartExplodePayload) {

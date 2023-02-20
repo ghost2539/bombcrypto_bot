@@ -300,7 +300,7 @@ export class Telegram {
             `\nRemaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
-            `ℹ️INFO: ⚡LIFE HERO | 🛡️SHIELD HERO\n\n` +
+            `ℹ️: ⚡LIFE HERO | 🛡️SHIELD HERO\n\n` +
             `🛠️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
             `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
             `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
@@ -388,7 +388,7 @@ ${resultDb
                 "🔰Account: " +
                 this.bot.getIdentify() +
                 "\n\n" +
-                "Rewards:\n" +
+                "💰Rewards:\n" +
                 // `Mined: ${detail.mined} | Invested: ${detail.invested} ` +
                 // `| Rewards: ${detail.rewards}\n` +
                 rewards
@@ -469,7 +469,7 @@ ${resultDb
             return `${corRaridade} [${hero.id}]: ${shield}`;
         };
         let message =
-            "Account not connected, wait the bot will try to connect again";
+            "⚠️Account not connected, wait the bot will try to connect again";
         const result = this.bot.squad.heroes;
 
         if (result && result.length) {
@@ -539,28 +539,29 @@ ${resultDb
         let totalAverageMap = totalMap / diffmin;
         let totalAverageHour = totalBcoin / diffmin;
         let description =
-            `Total minutes: ${diffmin.toFixed(2)}\n` +
-            `Average per minute: ${totalAverageHour.toFixed(2)}\n` +
-            `Average per day: ${(totalAverageHour * 1440).toFixed(2)}\n` +
-            `Average map per minute: ${totalAverageMap.toFixed(2)}`;
+            `💵 <b>Total minutes:</b> ${diffmin.toFixed(2)}\n` +
+            `═ Average per minute: ${totalAverageHour.toFixed(2)}\n` +
+            `═ Average per day: ${(totalAverageHour * 1440).toFixed(2)}\n` +
+            `═ Average map per minute: ${totalAverageMap.toFixed(2)}`;
         if (diffHours > 1) {
             totalAverageHour = totalBcoin / diffHours;
             totalAverageMap = totalMap / diffHours;
             description =
-                `Total hours: ${diffHours.toFixed(2)}\n` +
-                `Average per hour: ${totalAverageHour.toFixed(2)}\n` +
-                `Average per day: ${(totalAverageHour * 24).toFixed(2)}\n` +
-                `Average map per hour: ${totalAverageMap.toFixed(2)}`;
+                `💵 <b>Total hours:</b> ${diffHours.toFixed(2)}\n` +
+                `═ Average per hour: ${totalAverageHour.toFixed(2)}\n` +
+                `═ Average per day: ${(totalAverageHour * 24).toFixed(2)}\n` +
+                `═ Average map per hour: ${totalAverageMap.toFixed(2)}`;
         }
 
         const html =
-            `Account: ${this.bot.getIdentify()}\n\n` +
-            `Date start: ${formatDate(new Date(dateStart))}\n` +
-            `Date end: ${formatDate(new Date(dateEnd))}\n\n` +
-            `Bcoin start: ${bcoinStart.toFixed(2)}\n` +
-            `Bcoin end: ${bcoinEnd.toFixed(2)}\n\n` +
-            `Total bcoin: ${totalBcoin.toFixed(2)}\n` +
-            `Total maps: ${totalMap}\n\n` +
+            `🔰Account: ${this.bot.getIdentify()}\n\n` +
+            `<b>Calc Farm:</b>\n\n`+
+            `═ Date start: ${formatDate(new Date(dateStart))}\n` +
+            `═ Date end: ${formatDate(new Date(dateEnd))}\n\n` +
+            `═ BombCoin start: ${bcoinStart.toFixed(2)}\n` +
+            `═ BombCoin end: ${bcoinEnd.toFixed(2)}\n\n` +
+            `═ Total BombCoin: ${totalBcoin.toFixed(2)}\n` +
+            `═ Total maps: ${totalMap}\n\n` +
             description;
 
         context.replyWithHTML(html);
@@ -570,7 +571,7 @@ ${resultDb
             await this.bot.notification.hasUpdateVersion();
         if (existNotification) {
             const message =
-                "Please update your code version, run yarn start on your computer, and execute in your telegram /start";
+                "⚠️Please update your code version, run yarn start on your computer, and execute in your telegram /start";
             context.replyWithHTML(message);
             return false;
         }
@@ -581,8 +582,8 @@ ${resultDb
         const html =
             `🔰Account: ${this.bot.getIdentify()}\n\n` +
             `The values below are an average of how much it would cost right now\n\n` +
-            `Claim: ${result.claim}\n` +
-            `Reset Shield: ${result.resetShield}`;
+            `🏦Claim: ${result.claim}\n` +
+            `🛡️Reset Shield: ${result.resetShield}`;
 
         context.replyWithHTML(html);
     }
@@ -595,10 +596,10 @@ ${resultDb
 
         const result = await this.bot.getWalletBalance();
         const html =
-            `Account: ${this.bot.getIdentify()}\n\n` +
-            `MATIC: ${result.matic}\n` +
-            `USDT: ${result.usdt}\n` +
-            `BOMB: ${result.bomb}\n`;
+            `🔰Account: ${this.bot.getIdentify()}\n\n` +
+            `🪙MATIC: ${result.matic}\n` +
+            `💵USDT: ${result.usdt}\n` +
+            `🪙BOMB: ${result.bomb}\n`;
 
         context.replyWithHTML(html);
     }
@@ -751,7 +752,7 @@ ${resultDb
 
         if (!this.bot.shouldRun || !this.bot.client.isLoggedIn) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nAccount not working`
+                `🔰Account: ${this.bot.getIdentify()}\n\n⚠️Account not working`
             );
             return;
         }
@@ -760,8 +761,8 @@ ${resultDb
         const html =
             `🔰Account: ${this.bot.getIdentify()}\n\n` +
             `This command is for you to see a farm calculation from this moment on\n\n` +
-            `Date: ${formatDate(new Date(value.date))}\n` +
-            `Bcoin: ${value.bcoin.toFixed(2)}\n\n` +
+            `═ Date: ${formatDate(new Date(value.date))}\n` +
+            `═ Bcoin: ${value.bcoin.toFixed(2)}\n\n` +
             `to terminate and see the final result, type /stop_calc_farm`;
 
         context.replyWithHTML(html);

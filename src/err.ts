@@ -28,7 +28,7 @@ export class SuperBotException extends Error {
         this.type = type;
     }
 }
-
+// You won
 export function makeException(type: ISuperBotError, message: string) {
     return new SuperBotException(type, `${type}: ${message}`);
 }
