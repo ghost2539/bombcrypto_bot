@@ -54,6 +54,9 @@ export class Telegram {
                     this.telegramStopCalcFarm(ctx, false)
                 )
             );
+            this.telegraf?.command("pool", (ctx) =>
+            this.checkChatId(ctx, () => this.telegramPool(ctx), "/pool")
+            );
             this.telegraf?.command("shield", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramStatsShield(ctx))
             );
@@ -95,6 +98,7 @@ export class Telegram {
                 { command: "withdraw", description: "withdraw" },
                 { command: "wallet", description: "wallet" },
                 { command: "reset_shield", description: "reset_shield" },
+                { command: "pool", description: "pool" },
             ];
             await this.telegraf.telegram.setMyCommands(commands, {
                 language_code: "en",
@@ -205,7 +209,15 @@ export class Telegram {
         const message = await this.getStatsAccount();
         await context.replyWithHTML(message);
     }
-
+    // MINHAS MODIFICAÇÕES
+    async telegramPool(context: Context) {
+        const result = await this.bot.client.poolBomb();
+        const html =
+           `🔰Account : ${this.bot.getIdentify()}\n\n` +
+           `🛀Pool Bomb: ${parseFloat(result).toFixed(2)}`;
+  
+        context.replyWithHTML(html);
+    }
 
     public async getStatsAccount() {
         const formatMsg = (hero: Hero) => {
