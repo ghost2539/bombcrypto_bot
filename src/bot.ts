@@ -127,7 +127,7 @@ export class TreasureMapBot {
     public lastAdventure: number;
     public alertShield: number;
     public forceExit = true;
-    //public isCreatingMaterial: boolean;
+    public isCreatingMaterial: boolean;
     public isActivateHero = false;
     public isFarming: boolean;
     public isHeroFarming: boolean;
@@ -225,6 +225,7 @@ export class TreasureMapBot {
         this.history = [];
         this.index = 0;
         this.shouldRun = false;
+        this.isCreatingMaterial = false;
         this.isFarming = false;
         this.isHeroFarming = false;
         this.lastAdventure = 0;
