@@ -688,7 +688,9 @@ ${resultDb
             }
 
             await this.bot.resetShield(hero);
-            //await this.bot.client.syncBomberman();
+            await this.bot.client.syncBomberman();
+            await sleep(30000);
+            await this.bot.client.syncBomberman();
             await sleep(5000);
             await this.bot.client.getActiveHeroes();
         } catch (e: any) {

@@ -1036,9 +1036,9 @@ export class TreasureMapBot {
             }
         }
         if (shieldRepaired) {
-            //await this.client.syncBomberman();
-            //await sleep(5000);
-            //await this.client.getActiveHeroes();
+            await this.client.syncBomberman();
+            await sleep(5000);
+            await this.client.getActiveHeroes();
             this.setIsFarmTrue();
         }
     }
