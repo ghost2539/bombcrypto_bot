@@ -127,6 +127,10 @@ export class TreasureMapBot {
     public lastAdventure: number;
     public alertShield: number;
     public forceExit = true;
+    public isCreatingMaterial: boolean;
+    public isActivateHero = false;
+    public isFarming: boolean;
+    public isHeroFarming: boolean;
     public minHeroEnergyPercentage;
     public adventureBlocks: IGetBlockMapPayload[] = [];
     public adventureEnemies: IEnemies[] = [];
@@ -1029,9 +1033,10 @@ export class TreasureMapBot {
             }
         }
         if (shieldRepaired) {
-            await this.client.syncBomberman();
-            await sleep(5000);
-            await this.client.getActiveHeroes();
+            //await this.client.syncBomberman();
+            //await sleep(5000);
+            //await this.client.getActiveHeroes();
+            this.setIsFarmTrue();
         }
     }
 
@@ -1095,7 +1100,26 @@ export class TreasureMapBot {
         }
         return true;
     }
-
+    //MINHAS ALTERAÇÕES
+    setIsFarmTrue() {
+        if (
+           !this.isResettingShield &&
+           !this.isActivateHero &&
+           !this.isCreatingMaterial
+        ) {
+           this.isFarming = true;
+        }
+     }
+    async awaitHeroFarm() {
+        return new Promise((resolve) => {
+           const interval = setInterval(() => {
+              if (!this.isHeroFarming) {
+                 resolve(true);
+                 clearInterval(interval);
+              }
+           }, 1000);
+        });
+    }
     async resetShield(hero: Hero) {
         try {
             const { maxGasRepairShield, alertMaterial } = this.params;
@@ -1124,14 +1148,26 @@ export class TreasureMapBot {
                 logger.info(`current gas reset shield: ${gas.resetShield}`);
                 return;
             }
-
+            //MINHAS ALTERAÇÕES
+            this.isFarming = false;
             this.isResettingShield = true;
+
+            if (this.isHeroFarming) {
+            logger.info(`Waiting for the heroes to finish farming`);
+            await this.telegram.sendMessageChat(
+               `⌛Waiting for the heroes to finish farming`
+                );
+            }
+            
+            await this.awaitHeroFarm();
+
             await this.telegram.sendMessageChat(
                 `⌛Repairing shield hero ${hero.id}...`
             );
+
             const transaction = await this.client.web3ResetShield(hero);
             this.lastTransactionWeb3 = transaction.transactionHash;
-
+            await sleep(1000); //******/
             currentRock = await this.client.web3GetRock();
 
             await this.telegram.sendMessageChat(
