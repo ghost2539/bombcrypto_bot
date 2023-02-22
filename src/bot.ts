@@ -1019,26 +1019,38 @@ export class TreasureMapBot {
     }
 
     async checkShields() {
+        if (!this.shouldRun) return;
+
         logger.info(`Cheking shields...`);
-        const heroes = this.squad.heroes;
+
+        const heroes = this.squad.activeHeroes.filter(
+            (hero) =>
+            !hero.shields ||
+            hero.shields.length === 0 ||
+            this.getSumShield(hero) === 0
+        );
+        //const heroes = this.squad.heroes;
         let shieldRepaired = false;
 
         if (!this.params.resetShieldAuto) return false;
 
         for (const hero of heroes) {
+            const lastReset = await this.db.get(`lastResetShield/${hero.id}`);
+            
             if (
+                lastReset === null ||
+                Date.now() > lastReset + 6 + 60 * 60 * 1000 //6hrs
+             )
+           /*  if (
                 !hero.shields ||
                 hero.shields.length === 0 ||
                 this.getSumShield(hero) === 0
-            ) {
+            ) */ {
                 await this.resetShield(hero);
                 shieldRepaired = true;
             }
         }
         if (shieldRepaired) {
-            await this.client.syncBomberman();
-            await sleep(5000);
-            await this.client.getActiveHeroes();
             this.setIsFarmTrue();
         }
     }

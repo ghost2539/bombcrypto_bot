@@ -1,6 +1,7 @@
-import { EHeroState } from ".";
+import { EHeroState, HERO_RARITY_ARRAY } from ".";
 import { makeException } from "../err";
-import { Hero } from "./hero";
+//import { Hero } from "./hero";
+import { EHeroRarity, Hero } from "./hero";
 
 type ISquadParams = {
     heroes: Hero[];
@@ -27,6 +28,10 @@ export class Squad {
         return this.heroes.filter((hero) => hero.active);
     }
 
+    get inactiveHeroes() {
+        return this.heroes.filter((hero) => !hero.active);
+     }
+
     get rarest() {
         return this.activeHeroes.sort(
             (first, second) => second.rarityIndex - first.rarityIndex
@@ -40,12 +45,27 @@ export class Squad {
     }
     get sleeping() {
         return this.activeHeroes.filter(
-            (hero) => hero.state === "Sleep" || hero.energy === 0
+         (hero) =>
+            hero.state === "Sleep" ||
+            (hero.state === "Work" && hero.energy === 0)
         );
     }
     get home() {
         return this.activeHeroes.filter((hero) => hero.state === "Home");
     }
+    /*********************/
+    getTotalHeroes(): Record<EHeroRarity, number> {
+        const heroes = {} as Record<EHeroRarity, number>;
+  
+        HERO_RARITY_ARRAY.map((key) => {
+           heroes[key] = 0;
+        });
+  
+        return this.params.heroes.reduce((c, p) => {
+           c[p.rarity] = (c[p.rarity] || 0) + 1;
+           return c;
+        }, heroes);
+     }
 
     update(params: ISquadParams) {
         this.params = params;
@@ -55,6 +75,11 @@ export class Squad {
     updateHeroEnergy(params: IHeroUpdateParams) {
         const hero = this.byId(params.id);
         hero.updateEnergy(params.energy);
+    }
+    /*************/
+    updateHeroShield(params: Hero) {
+        const hero = this.byId(params.id);
+        hero.updateShields(params.shields);
     }
 
     updateHeroState(heroId: number, state: EHeroState) {

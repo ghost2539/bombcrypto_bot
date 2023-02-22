@@ -313,7 +313,19 @@ export class Telegram {
             (v) => v.indexOf("heroZeroShield") !== -1
         ).length;
     }
-
+    /*********************************************** */
+    public getTotalMaterial(database: any){
+/*         return Object.keys(database).filter(
+            (v) => v.indexOf("heroZeroShield") !== -1
+        ).length;
+        if (hero.rockRepairShield > currentRock) {
+            return context.replyWithHTML(
+                `🔰Account: ${this.bot.getIdentify()}\n\n⚠Attention\nNot enough material, needed 🪨${
+                    hero.rockRepairShield
+                }, you have 🪨${currentRock}`
+            );
+        }*/
+    }
     async telegramRewardsAll(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
@@ -350,10 +362,7 @@ ${resultDb
             .padStart(2, "0")}`;
         
         //minhas alterações
-        /*let material_maker = await this.bot.client.web3GetRock();
-        let mediaDiaria = await this.getMediaDiaria(context);
-        if (!mediaDiaria){mediaDiaria=0};
-        if (!material_maker){material_maker=0};*/
+/************************************************************* */
         return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield}\n`;//${dateStr}\n`;
     })
     .join("\n")}`;
@@ -631,7 +640,9 @@ ${resultDb
         try {
             const { maxGasRepairShield } = this.bot.params;
 
-            const hero = this.bot.squad.heroes.find((h) => h.id == heroId);
+            //const hero = this.bot.squad.heroes.find((h) => h.id == heroId);
+            
+            const hero = this.bot.squad.activeHeroes.find((h) => h.id == heroId);
             if (!hero) return;
 
             if (!this.bot.client.isConnected) {
@@ -670,29 +681,27 @@ ${resultDb
 
             if (hero.rockRepairShield > currentRock) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nNot enough material, needed ${
+                    `🔰Account: ${this.bot.getIdentify()}\n\n⚠Attention\nNot enough material, needed 🪨${
                         hero.rockRepairShield
-                    }, you have ${currentRock}`
+                    }, you have 🪨${currentRock}`
                 );
             }
 
-            if (
-                maxGasRepairShield > 0 &&
-                gas.resetShield > maxGasRepairShield
-            ) {
+            if (maxGasRepairShield > 0 && gas.resetShield > maxGasRepairShield) {
                 return context.replyWithHTML(
                     `🔰Account: ${this.bot.getIdentify()}\n\nYou configured to spend a maximum of ${maxGasRepairShield} on the transaction, at the moment ${
                         gas.resetShield
                     } is being charged`
                 );
             }
-
+//******************************************************************************* */
             await this.bot.resetShield(hero);
-            await this.bot.client.syncBomberman();
+            this.bot.setIsFarmTrue();
+            /*await this.bot.client.syncBomberman();
             await sleep(30000);
             await this.bot.client.syncBomberman();
             await sleep(5000);
-            await this.bot.client.getActiveHeroes();
+            await this.bot.client.getActiveHeroes();*/
         } catch (e: any) {
             context.replyWithHTML(e.message);
         }
