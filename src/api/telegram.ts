@@ -313,18 +313,10 @@ export class Telegram {
             (v) => v.indexOf("heroZeroShield") !== -1
         ).length;
     }
-    /*********************************************** */
-    public getTotalMaterial(database: any){
-/*         return Object.keys(database).filter(
-            (v) => v.indexOf("heroZeroShield") !== -1
-        ).length;
-        if (hero.rockRepairShield > currentRock) {
-            return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\n⚠Attention\nNot enough material, needed 🪨${
-                    hero.rockRepairShield
-                }, you have 🪨${currentRock}`
-            );
-        }*/
+    /************MINHAS ALTERAÇÕES******************** */
+    public getTotalMaterial(){
+         const material = this.bot.client.web3GetRock();
+         return material;
     }
     async telegramRewardsAll(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;
@@ -362,8 +354,9 @@ ${resultDb
             .padStart(2, "0")}`;
         
         //minhas alterações
+        let m = this.getTotalMaterial();
 /************************************************************* */
-        return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield}\n`;//${dateStr}\n`;
+        return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield} | 🪨${m}\n`;//${dateStr}\n`;
     })
     .join("\n")}`;
 

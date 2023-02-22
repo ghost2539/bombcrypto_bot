@@ -845,16 +845,34 @@ export class Client {
             ABI_RESET_SHIELD_HERO,
             this.web3.utils.toChecksumAddress(CONTRACT_RESET_SHIELD)
         );
-        const data = await contract.methods.resetShieldHeroS(
+        const gasLimit = await contract.methods
+         .resetShieldHeroS(
+            this.web3.utils.toBN(id),
+            this.web3.utils.toBN(rockRepairShield)
+         )
+         .estimateGas({ from: this.loginParams.wallet });
+
+        const dataTransaction = await contract.methods.resetShieldHeroS(
             this.web3.utils.toBN(id),
             this.web3.utils.toBN(rockRepairShield)
         );
+        /*
+        const data = await contract.methods.resetShieldHeroS(
+            this.web3.utils.toBN(id),
+            this.web3.utils.toBN(rockRepairShield)
+        );*/
 
-        return this.sendTransactionWeb3({
+       /* return this.sendTransactionWeb3({
             contract: contract,
             dataTransaction: data,
             gasLimit: 200000,
-        });
+        });*/
+        return this.sendTransactionWeb3({
+            contract,
+            dataTransaction,
+            gasLimit,
+         });
+
     }
     async checkTransaction(hash: string) {
         return new Promise<boolean>((resolve) => {

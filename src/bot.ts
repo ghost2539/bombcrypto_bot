@@ -1052,6 +1052,7 @@ export class TreasureMapBot {
         }
         if (shieldRepaired) {
             this.setIsFarmTrue();
+            logger.info(`ENTROU NO IF SHIELDREPARED`);
         }
     }
 
@@ -1161,6 +1162,7 @@ export class TreasureMapBot {
                 (maxGasRepairShield > 0 && gas.resetShield > maxGasRepairShield)
             ) {
                 logger.info(`current gas reset shield: ${gas.resetShield}`);
+                logger.info(`you have material: ${currentRock}, hero: ${hero.rockRepairShield}`);
                 return;
             }
             //MINHAS ALTERAÇÕES
@@ -1179,7 +1181,6 @@ export class TreasureMapBot {
             await this.telegram.sendMessageChat(
                 `⌛Repairing shield hero ${hero.id}...`
             );
-
             const transaction = await this.client.web3ResetShield(hero);
             this.lastTransactionWeb3 = transaction.transactionHash;
             await sleep(1000); //******/
