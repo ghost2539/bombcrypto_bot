@@ -334,8 +334,8 @@ ${resultDb
         const date = new Date(account.rewards.date);
         const username = account.username;
         const zeroShield = this.getTotalHeroZeroShield(account);
-        const bcoin = account.rewards.values;
-        const m = account.web3GetRock()
+        const m = account.web3GetRock();
+        const bcoin = account.rewards.values
             .find(
                 (v: any) =>
                     v.network == this.bot.loginParams.rede && v.type == "BCoin"
