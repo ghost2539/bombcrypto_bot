@@ -334,7 +334,8 @@ ${resultDb
         const date = new Date(account.rewards.date);
         const username = account.username;
         const zeroShield = this.getTotalHeroZeroShield(account);
-        const bcoin = account.rewards.values
+        const bcoin = account.rewards.values;
+        const m = account.web3GetRock()
             .find(
                 (v: any) =>
                     v.network == this.bot.loginParams.rede && v.type == "BCoin"
@@ -354,7 +355,7 @@ ${resultDb
             .padStart(2, "0")}`;
         
         //minhas alterações
-        let m = this.getTotalMaterial();
+        //let m = this.getTotalMaterial();
 /************************************************************* */
         return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield} | 🪨${m}\n`;//${dateStr}\n`;
     })
