@@ -301,7 +301,7 @@ export class Telegram {
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
             `ℹ️: ⚡LIFE HERO | 🛡️SHIELD HERO\n\n` +
-            `🛠️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
+            `👷‍♂️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
             `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
             `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
 
@@ -796,9 +796,9 @@ ${resultDb
         const html =
             `🔰Account: ${this.bot.getIdentify()}\n\n` +
             `This command is for you to see a farm calculation from this moment on\n\n` +
-            `═ Date: ${formatDate(new Date(value.date))}\n` +
-            `═ Bcoin: ${value.bcoin.toFixed(2)}\n\n` +
-            `to terminate and see the final result, type /stop_calc_farm`;
+            `Date: ${formatDate(new Date(value.date))}\n` +
+            `Bcoin: ${value.bcoin.toFixed(2)}\n\n` +
+            `to terminate and see the final result, type <b>/stop_calc_farm</b>`;
 
         context.replyWithHTML(html);
     }
