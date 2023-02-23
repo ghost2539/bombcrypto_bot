@@ -160,6 +160,7 @@ export class TreasureMapBot {
             ignoreNumHeroWork = false,
             reportRewards = 0,
             ignoreCommands = [],
+            workHeroWithShield = 0,
             rede = "BSC",
             version = VERSION_CODE,
             alertShield = 0,
