@@ -143,6 +143,7 @@ export class TreasureMapBot {
     public db: Database;
     public isResettingShield = false;
     public lastTransactionWeb3 = "";
+    public lastTransactionWeb3Flag ="0"
 
     constructor(loginParams: ILoginParams, moreParams: IMoreOptions) {
         const {
@@ -1022,7 +1023,6 @@ export class TreasureMapBot {
         if (!this.shouldRun) return;
 
         logger.info(`Cheking shields...`);
-
         const heroes = this.squad.activeHeroes.filter(
             (hero) =>
             !hero.shields ||
@@ -1052,7 +1052,7 @@ export class TreasureMapBot {
         }
         if (shieldRepaired) {
             this.setIsFarmTrue();
-            logger.info(`ENTROU NO IF SHIELDREPARED`);
+            sleep(5000);
         }
     }
 
@@ -1181,15 +1181,20 @@ export class TreasureMapBot {
             await this.telegram.sendMessageChat(
                 `⌛Repairing shield hero ${hero.id}...`
             );
-            const transaction = await this.client.web3ResetShield(hero);
-            this.lastTransactionWeb3 = transaction.transactionHash;
-            await sleep(1000); //******/
-            currentRock = await this.client.web3GetRock();
+            //MINHAS ALTERAÇÕES
+                const transaction = await this.client.web3ResetShield(hero);
+                this.lastTransactionWeb3 = transaction.transactionHash;
+                this.telegram.sendMessageChat(`Transaction: ${this.lastTransactionWeb3}`);
+                await sleep(2000); //******/
+                currentRock = await this.client.web3GetRock();
 
-            await this.telegram.sendMessageChat(
-                `🛡️Hero ${hero.id} shield has been repaired\n\nYou have 🪨${currentRock} of material`
-            );
-            this.isResettingShield = false;
+                await this.telegram.sendMessageChat(
+                    `🛡️Hero ${hero.id} shield has been repaired\n\nYou have 🪨${currentRock} of material`
+                );
+                this.isResettingShield = false;
+                sleep(1000);
+                this.checkShields();
+
         } catch (e: any) {
             this.isResettingShield = false;
             this.telegram.sendMessageChat(
