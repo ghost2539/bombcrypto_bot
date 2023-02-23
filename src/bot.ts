@@ -101,6 +101,7 @@ export interface IMoreOptions {
     version?: number;
     maxGasRepairShield?: number;
     alertMaterial?: number;
+    workHeroWithShield?: number;
     alertShield?: number;
     numHeroWork?: number;
     telegramChatId?: string;
@@ -547,22 +548,26 @@ export class TreasureMapBot {
             this.notification.setHeroZeroShield(hero.id, 0);
         }
     }
-
+//******************************REFRESH HERO************************ */
     async refreshHeroSelection() {
         logger.info("Refreshing heroes");
-        await this.client.getActiveHeroes();
-        const { ignoreNumHeroWork } = this.params;
+        //await this.client.getActiveHeroes();
+        await this.client.syncBomberman();
+        //const { ignoreNumHeroWork } = this.params;
+        const { ignoreNumHeroWork, numHeroWork, workHeroWithShield } =
+        this.params;
 
         this.selection = this.squad.byState("Work");
         const heroes = this.squad.notWorking.sort((a, b) => {
             const apercent = (a.energy / a.maxEnergy) * 100;
             const bpercent = (b.energy / b.maxEnergy) * 100;
 
-            return bpercent - apercent;
+            //return bpercent - apercent;
+            return bpercent - apercent || b.rarityIndex - a.rarityIndex;
         });
         for (const hero of heroes) {
             const percent = (hero.energy / hero.maxEnergy) * 100;
-            if (percent < this.minHeroEnergyPercentage) continue;
+            //if (percent < this.minHeroEnergyPercentage) continue;
 
             if (
                 !hero.shields ||
@@ -572,20 +577,43 @@ export class TreasureMapBot {
                 continue;
             }
 
-            if (
+            /* if (
                 this.workingSelection.length <= this.params.numHeroWork - 1 ||
                 (ignoreNumHeroWork && percent >= 100)
             ) {
                 logger.info(`Sending hero ${hero.id} to work`);
                 await this.client.goWork(hero);
                 this.selection.push(hero);
-            }
+            } */
+            if (
+                workHeroWithShield > 0 &&
+                this.getSumShield(hero) <= workHeroWithShield &&
+                hero.energy >= 50
+             ) {
+                this.toWork(hero);
+                continue;
+             }
+    
+             if (percent < this.minHeroEnergyPercentage) continue;
+    
+             if (
+                this.workingSelection.length <= numHeroWork - 1 ||
+                (ignoreNumHeroWork && percent >= 100)
+             ) {
+                this.toWork(hero);
+             }
         }
 
         logger.info(`Sent ${this.selection.length} heroes to work`);
 
         await this.refreshHeroAtHome();
     }
+
+    async toWork(hero: Hero) {
+        logger.info(`Sending hero ${hero.id} to work`);
+        await this.client.goWork(hero);
+        this.selection.push(hero);
+     }
 
     async getReward() {
         const result = await this.client.getReward();
@@ -1057,7 +1085,9 @@ export class TreasureMapBot {
     }
 
     async loop() {
+        logger.info("Starting bot...");
         this.shouldRun = true;
+        this.isFarming = true;
         connectWebSocketAnalytics(this).catch((e) => {
             console.log(e);
         });
@@ -1116,6 +1146,13 @@ export class TreasureMapBot {
         }
         return true;
     }
+
+    async syncBomberman() {
+        const heroesParse = await this.client.syncBomberman();
+        return heroesParse.map(parseGetActiveBomberPayload).map(buildHero);
+     }
+
+
     //MINHAS ALTERAÇÕES
     setIsFarmTrue() {
         if (
