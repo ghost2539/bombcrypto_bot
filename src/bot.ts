@@ -1104,6 +1104,7 @@ export class TreasureMapBot {
         this.playing = this.params.modeAmazon ? "Amazon" : "Treasure";
         await this.client.startPVE(0, this.params.modeAmazon);
         do {
+            this.playing = "Amazon";
             await this.checkVersion();
 
             if (this.map.totalLife <= 0) {
@@ -1129,9 +1130,10 @@ export class TreasureMapBot {
             //     this.lastAdventure = Date.now();
             // }
             this.playing = "sleep";
-            this.checkShields().catch((e) => {
+            /* this.checkShields().catch((e) => {
                 console.log(e);
-            });
+            }); */
+            await this.checkShields();
             logger.info("Will sleep for 10 seconds");
             await sleep(10 * 1000);
         } while (this.shouldRun);
