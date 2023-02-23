@@ -1192,8 +1192,11 @@ export class TreasureMapBot {
                     `🛡️Hero ${hero.id} shield has been repaired\n\nYou have 🪨${currentRock} of material`
                 );
                 this.isResettingShield = false;
-                sleep(1000);
-                this.checkShields();
+                this.telegram.sendMessageChat(`Reboot Account now.... \nPlease wait...`);
+                this.telegram.telegramExit;
+                sleep(8000);
+                this.telegram.telegramStart;
+                this.telegram.sendMessageChat(`Account is now Working...`);
 
         } catch (e: any) {
             this.isResettingShield = false;
