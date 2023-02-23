@@ -188,6 +188,7 @@ export class TreasureMapBot {
             numHeroWork,
             server,
             ignoreCommands,
+            workHeroWithShield,
             telegramChatId,
             telegramKey,
             telegramChatIdCheck,
