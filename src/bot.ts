@@ -96,12 +96,9 @@ export interface IMoreOptions {
     adventureHeroes?: string;
     rede?: string;
     identify?: string;
-    ignoreCommands?: string[];
-    rewardsAllPermission?: string[];
     version?: number;
     maxGasRepairShield?: number;
     alertMaterial?: number;
-    workHeroWithShield?: number;
     alertShield?: number;
     numHeroWork?: number;
     telegramChatId?: string;
@@ -128,10 +125,6 @@ export class TreasureMapBot {
     public lastAdventure: number;
     public alertShield: number;
     public forceExit = true;
-    public isCreatingMaterial: boolean;
-    public isActivateHero = false;
-    public isFarming: boolean;
-    public isHeroFarming: boolean;
     public minHeroEnergyPercentage;
     public adventureBlocks: IGetBlockMapPayload[] = [];
     public adventureEnemies: IEnemies[] = [];
@@ -144,7 +137,6 @@ export class TreasureMapBot {
     public db: Database;
     public isResettingShield = false;
     public lastTransactionWeb3 = "";
-    public lastTransactionWeb3Flag ="0"
 
     constructor(loginParams: ILoginParams, moreParams: IMoreOptions) {
         const {
@@ -159,8 +151,6 @@ export class TreasureMapBot {
             telegramChatIdCheck = false,
             ignoreNumHeroWork = false,
             reportRewards = 0,
-            ignoreCommands = [],
-            workHeroWithShield = 0,
             rede = "BSC",
             version = VERSION_CODE,
             alertShield = 0,
@@ -169,7 +159,6 @@ export class TreasureMapBot {
             numHeroWork = 15,
             server = "sea",
             telegramChatId = "",
-            rewardsAllPermission = [],
             telegramKey = "",
             identify = "",
         } = moreParams;
@@ -187,13 +176,10 @@ export class TreasureMapBot {
             alertShield,
             numHeroWork,
             server,
-            ignoreCommands,
-            workHeroWithShield,
             telegramChatId,
             telegramKey,
             telegramChatIdCheck,
             resetShieldAuto,
-            rewardsAllPermission,
             maxGasRepairShield,
             ignoreNumHeroWork,
             alertMaterial,
@@ -229,9 +215,6 @@ export class TreasureMapBot {
         this.history = [];
         this.index = 0;
         this.shouldRun = false;
-        this.isCreatingMaterial = false;
-        this.isFarming = false;
-        this.isHeroFarming = false;
         this.lastAdventure = 0;
         this.alertShield = alertShield;
         if ("username" in loginParams) {
@@ -532,44 +515,40 @@ export class TreasureMapBot {
     async alertShieldHero(hero: Hero) {
         if (!(await this.notification.hasHeroShield(hero.id))) {
             this.telegram.sendMessageChat(
-                `🛡️ Hero ${hero.id} needs shield repair`
+                `Hero ${hero.id} needs shield repair`
             );
             this.notification.setHeroShield(hero.id, this.getSumShield(hero));
         }
-        logger.info(`🛡️ Hero ${hero.id} needs shield repair`);
+        logger.info(`Hero ${hero.id} needs shield repair`);
     }
     async alertMaterial(material: number) {
         if (!(await this.notification.hasMaterial())) {
-            this.telegram.sendMessageChat(`⚠️You need more material 🪨`);
+            this.telegram.sendMessageChat(`You need more material`);
             this.notification.setMaterial(material);
         }
     }
     async alertShielZerodHero(hero: Hero) {
         if (!(await this.notification.hasHeroZeroShield(hero.id))) {
-            this.telegram.sendMessageChat(`💀 Hero ${hero.id} has 0 shield`);
+            this.telegram.sendMessageChat(`Hero ${hero.id} has 0 shield`);
             this.notification.setHeroZeroShield(hero.id, 0);
         }
     }
-//******************************REFRESH HERO************************ */
+
     async refreshHeroSelection() {
         logger.info("Refreshing heroes");
-        //await this.client.getActiveHeroes();
-        await this.client.syncBomberman();
-        //const { ignoreNumHeroWork } = this.params;
-        const { ignoreNumHeroWork, numHeroWork, workHeroWithShield } =
-        this.params;
+        await this.client.getActiveHeroes();
+        const { ignoreNumHeroWork } = this.params;
 
         this.selection = this.squad.byState("Work");
         const heroes = this.squad.notWorking.sort((a, b) => {
             const apercent = (a.energy / a.maxEnergy) * 100;
             const bpercent = (b.energy / b.maxEnergy) * 100;
 
-            //return bpercent - apercent;
-            return bpercent - apercent || b.rarityIndex - a.rarityIndex;
+            return bpercent - apercent;
         });
         for (const hero of heroes) {
             const percent = (hero.energy / hero.maxEnergy) * 100;
-            //if (percent < this.minHeroEnergyPercentage) continue;
+            if (percent < this.minHeroEnergyPercentage) continue;
 
             if (
                 !hero.shields ||
@@ -579,43 +558,20 @@ export class TreasureMapBot {
                 continue;
             }
 
-            /* if (
+            if (
                 this.workingSelection.length <= this.params.numHeroWork - 1 ||
                 (ignoreNumHeroWork && percent >= 100)
             ) {
                 logger.info(`Sending hero ${hero.id} to work`);
                 await this.client.goWork(hero);
                 this.selection.push(hero);
-            } */
-            if (
-                workHeroWithShield > 0 &&
-                this.getSumShield(hero) <= workHeroWithShield &&
-                hero.energy >= 50
-             ) {
-                this.toWork(hero);
-                continue;
-             }
-    
-             if (percent < this.minHeroEnergyPercentage) continue;
-    
-             if (
-                this.workingSelection.length <= numHeroWork - 1 ||
-                (ignoreNumHeroWork && percent >= 100)
-             ) {
-                this.toWork(hero);
-             }
+            }
         }
 
         logger.info(`Sent ${this.selection.length} heroes to work`);
 
         await this.refreshHeroAtHome();
     }
-
-    async toWork(hero: Hero) {
-        logger.info(`Sending hero ${hero.id} to work`);
-        await this.client.goWork(hero);
-        this.selection.push(hero);
-     }
 
     async getReward() {
         const result = await this.client.getReward();
@@ -1050,46 +1006,31 @@ export class TreasureMapBot {
     }
 
     async checkShields() {
-        if (!this.shouldRun) return;
-
         logger.info(`Cheking shields...`);
-        const heroes = this.squad.activeHeroes.filter(
-            (hero) =>
-            !hero.shields ||
-            hero.shields.length === 0 ||
-            this.getSumShield(hero) === 0
-        );
-        //const heroes = this.squad.heroes;
+        const heroes = this.squad.heroes;
         let shieldRepaired = false;
 
         if (!this.params.resetShieldAuto) return false;
 
         for (const hero of heroes) {
-            const lastReset = await this.db.get(`lastResetShield/${hero.id}`);
-            
             if (
-                lastReset === null ||
-                Date.now() > lastReset + 6 + 60 * 60 * 1000 //6hrs
-             )
-           /*  if (
                 !hero.shields ||
                 hero.shields.length === 0 ||
                 this.getSumShield(hero) === 0
-            ) */ {
+            ) {
                 await this.resetShield(hero);
                 shieldRepaired = true;
             }
         }
         if (shieldRepaired) {
-            this.setIsFarmTrue();
-            sleep(5000);
+            await this.client.syncBomberman();
+            await sleep(5000);
+            await this.client.getActiveHeroes();
         }
     }
 
     async loop() {
-        logger.info("Starting bot...");
         this.shouldRun = true;
-        this.isFarming = true;
         connectWebSocketAnalytics(this).catch((e) => {
             console.log(e);
         });
@@ -1104,7 +1045,6 @@ export class TreasureMapBot {
         this.playing = this.params.modeAmazon ? "Amazon" : "Treasure";
         await this.client.startPVE(0, this.params.modeAmazon);
         do {
-            this.playing = "Amazon";
             await this.checkVersion();
 
             if (this.map.totalLife <= 0) {
@@ -1130,10 +1070,9 @@ export class TreasureMapBot {
             //     this.lastAdventure = Date.now();
             // }
             this.playing = "sleep";
-            /* this.checkShields().catch((e) => {
+            this.checkShields().catch((e) => {
                 console.log(e);
-            }); */
-            await this.checkShields();
+            });
             logger.info("Will sleep for 10 seconds");
             await sleep(10 * 1000);
         } while (this.shouldRun);
@@ -1151,32 +1090,6 @@ export class TreasureMapBot {
         return true;
     }
 
-    async syncBomberman() {
-        const heroesParse = await this.client.syncBomberman();
-        return heroesParse.map(parseGetActiveBomberPayload).map(buildHero);
-     }
-
-
-    //MINHAS ALTERAÇÕES
-    setIsFarmTrue() {
-        if (
-           !this.isResettingShield &&
-           !this.isActivateHero &&
-           !this.isCreatingMaterial
-        ) {
-           this.isFarming = true;
-        }
-     }
-    async awaitHeroFarm() {
-        return new Promise((resolve) => {
-           const interval = setInterval(() => {
-              if (!this.isHeroFarming) {
-                 resolve(true);
-                 clearInterval(interval);
-              }
-           }, 1000);
-        });
-    }
     async resetShield(hero: Hero) {
         try {
             const { maxGasRepairShield, alertMaterial } = this.params;
@@ -1203,46 +1116,26 @@ export class TreasureMapBot {
                 (maxGasRepairShield > 0 && gas.resetShield > maxGasRepairShield)
             ) {
                 logger.info(`current gas reset shield: ${gas.resetShield}`);
-                logger.info(`you have material: ${currentRock}, hero: ${hero.rockRepairShield}`);
                 return;
             }
-            //MINHAS ALTERAÇÕES
-            this.isFarming = false;
+
             this.isResettingShield = true;
-
-            if (this.isHeroFarming) {
-            logger.info(`Waiting for the heroes to finish farming`);
             await this.telegram.sendMessageChat(
-               `⌛Waiting for the heroes to finish farming`
-                );
-            }
-            
-            await this.awaitHeroFarm();
-
-            await this.telegram.sendMessageChat(
-                `⌛Repairing shield hero ${hero.id}...`
+                `Repairing shield hero ${hero.id}...`
             );
-            //MINHAS ALTERAÇÕES
-                const transaction = await this.client.web3ResetShield(hero);
-                this.lastTransactionWeb3 = transaction.transactionHash;
-                this.telegram.sendMessageChat(`Transaction: ${this.lastTransactionWeb3}`);
-                await sleep(2000); //******/
-                currentRock = await this.client.web3GetRock();
+            const transaction = await this.client.web3ResetShield(hero);
+            this.lastTransactionWeb3 = transaction.transactionHash;
 
-                await this.telegram.sendMessageChat(
-                    `🛡️Hero ${hero.id} shield has been repaired\n\nYou have 🪨${currentRock} of material`
-                );
-                this.isResettingShield = false;
-                this.telegram.sendMessageChat(`Reboot Account now.... \nPlease wait...`);
-                this.telegram.telegramExit;
-                sleep(8000);
-                this.telegram.telegramStart;
-                this.telegram.sendMessageChat(`Account is now Working...`);
+            currentRock = await this.client.web3GetRock();
 
+            await this.telegram.sendMessageChat(
+                `Hero ${hero.id} shield has been repaired\n\nYou have ${currentRock} of material`
+            );
+            this.isResettingShield = false;
         } catch (e: any) {
             this.isResettingShield = false;
             this.telegram.sendMessageChat(
-                `❌Error repair shield\n\n${e.message}`
+                `Error repair shield\n\n${e.message}`
             );
         }
     }
@@ -1375,7 +1268,7 @@ export class TreasureMapBot {
     }
 
     notificationBlockCage() {
-        this.telegram.sendMessageChat("🥳You won a hero");
+        this.telegram.sendMessageChat("You won a hero");
     }
 
     private handleExplosion(payload: IStartExplodePayload) {
@@ -1436,8 +1329,8 @@ export class TreasureMapBot {
     }
 
     async checkVersion() {
-        logger.info("Checking version...");
-        /*const currentVersion = await got
+        /* logger.info("Checking version...");
+        const currentVersion = await got
             .get(
                 "http://bombcrypto.lucasvieceli.com.br:8181/version?date=" +
                     new Date().getTime(),
@@ -1453,9 +1346,9 @@ export class TreasureMapBot {
                 return undefined;
             });
 
-        if (currentVersion === undefined) return true;*/
+        if (currentVersion === undefined) return true;
 
-        /*if (currentVersion != version) {
+        if (currentVersion != version) {
             const message =
                 "Please update your code version, run yarn start on your computer, and execute in your telegram /start";
 
@@ -1467,7 +1360,7 @@ export class TreasureMapBot {
             throw makeException("Version", message);
         } else {
             await this.notification.unsetUpdateVersion();
-        }*/
+        } */
         return true;
     }
 }

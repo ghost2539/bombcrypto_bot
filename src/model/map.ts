@@ -291,23 +291,6 @@ export class TreasureMap {
     toString(): string {
         return `Map: ${this.totalLife}/${this.totalMaxLife}`;
     }
-    //MINHAS ALTERAÇÕES - icones dos itens que estão no mapa
-    getMapItens(nomeItem: string){
-        let x = 0;
-        if (nomeItem === "Green"){x=0};
-        if (nomeItem === "Rock"){x=1};
-        if (nomeItem === "Cage"){x=2};
-        if (nomeItem === "WoodChest"){x=3};
-        if (nomeItem === "AmethystChest"){x=4};
-        if (nomeItem === "GoldChest"){x=5};
-        if (nomeItem === "DiamondChest"){x=6};
-        if (nomeItem === "KeyChest"){x=7};
-        if (nomeItem === "Pig"){x=8};
-
-        const typesItens= ["🟩","🪨","🔐","🪤","💎","🪙","💎","🔑","🐷"];
-        const tipoItem = typesItens[x];
-        return tipoItem;
-    }
 
     formatMsgBlock() {
         const blocks = this.params.blocks
@@ -317,12 +300,9 @@ export class TreasureMap {
                 r[a.type].push(a);
                 return r;
             }, Object.create(null));
-        
-        
-        //MINHAS ALTERAÇÕES *******************************************
-        
+
         return Object.keys(blocks).map(
-            (type) => `${(this.getMapItens(type))} ${type}: ${blocks[type].length}`
+            (type) => `${type}: ${blocks[type].length}`
         );
     }
 }

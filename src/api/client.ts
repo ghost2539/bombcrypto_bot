@@ -15,9 +15,7 @@ import { IMoreOptions } from "../bot";
 import {
     ABI_APPROVE_CLAIM,
     ABI_RESET_SHIELD_HERO,
-    ADDRESS_BOMB,
     CONTRACT_APPROVE_CLAIM,
-    CONTRACT_BOMB,
     CONTRACT_RESET_SHIELD,
     PORT,
     WEB3_RPC,
@@ -774,33 +772,6 @@ export class Client {
         return retryWeb3<TransactionReceipt>(promise);
     }
 
-    //MINHAS ALTERAÇÕES
-    async poolBomb() {
-        const contract = new this.web3.eth.Contract(
-           [
-              {
-                 inputs: [
-                    {
-                       internalType: "address",
-                       name: "account",
-                       type: "address",
-                    },
-                 ],
-                 name: "balanceOf",
-                 outputs: [
-                    { internalType: "uint256", name: "", type: "uint256" },
-                 ],
-                 stateMutability: "view",
-                 type: "function",
-              },
-           ],
-           this.web3.utils.toChecksumAddress(CONTRACT_BOMB)
-        );
-  
-        const value = await contract.methods.balanceOf(ADDRESS_BOMB).call();
-        return this.web3.utils.fromWei(value, "ether");
-    }
-
     async web3Balance(contractStr: string, unit: Unit = "ether") {
         const contract = new this.web3.eth.Contract(
             [
@@ -845,34 +816,16 @@ export class Client {
             ABI_RESET_SHIELD_HERO,
             this.web3.utils.toChecksumAddress(CONTRACT_RESET_SHIELD)
         );
-        const gasLimit = await contract.methods
-         .resetShieldHeroS(
-            this.web3.utils.toBN(id),
-            this.web3.utils.toBN(rockRepairShield)
-         )
-         .estimateGas({ from: this.loginParams.wallet });
-
-        const dataTransaction = await contract.methods.resetShieldHeroS(
-            this.web3.utils.toBN(id),
-            this.web3.utils.toBN(rockRepairShield)
-        );
-        /*
         const data = await contract.methods.resetShieldHeroS(
             this.web3.utils.toBN(id),
             this.web3.utils.toBN(rockRepairShield)
-        );*/
+        );
 
-       /* return this.sendTransactionWeb3({
+        return this.sendTransactionWeb3({
             contract: contract,
             dataTransaction: data,
             gasLimit: 200000,
-        });*/
-        return this.sendTransactionWeb3({
-            contract,
-            dataTransaction,
-            gasLimit,
-         });
-
+        });
     }
     async checkTransaction(hash: string) {
         return new Promise<boolean>((resolve) => {

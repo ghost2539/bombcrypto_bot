@@ -54,9 +54,6 @@ export class Telegram {
                     this.telegramStopCalcFarm(ctx, false)
                 )
             );
-            this.telegraf?.command("pool", (ctx) =>
-            this.checkChatId(ctx, () => this.telegramPool(ctx))
-            );
             this.telegraf?.command("shield", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramStatsShield(ctx))
             );
@@ -98,7 +95,6 @@ export class Telegram {
                 { command: "withdraw", description: "withdraw" },
                 { command: "wallet", description: "wallet" },
                 { command: "reset_shield", description: "reset_shield" },
-                { command: "pool", description: "pool" },
             ];
             await this.telegraf.telegram.setMyCommands(commands, {
                 language_code: "en",
@@ -133,7 +129,6 @@ export class Telegram {
             console.log(e);
         }
     }
-    //MINHAS ALTERAÇÕES
     checkChatId(context: Context, fn: any) {
         if (this.bot.params.telegramChatId) {
             const chatId = getChatId(context);
@@ -149,33 +144,6 @@ export class Telegram {
         }
         return fn(context);
     }
-    /*checkChatId(context: Context, fn: any, command: string) {
-        const { ignoreCommands } = this.bot.params;
-        if (ignoreCommands.includes(command)) return;
-  
-        const now = Date.now() / 1000;
-        const timedelta = now - (context.message?.date || 0);
-  
-        if (timedelta >= 30) {
-           logger.info(`Ignoring message ${context.message?.message_id}`);
-           return;
-        }
-  
-        if (this.bot.params.telegramChatId) {
-           const chatId = getChatId(context);
-           if (
-              this.bot.params.telegramChatIdCheck &&
-              chatId != this.bot.params.telegramChatId
-           ) {
-              context.replyWithHTML(
-                 `Account: ${this.bot.getIdentify()}\n\nYou do not have permission. your Telegram Chat Id is different from what was informed in the settings`
-              );
-              return;
-           }
-        }
-        return fn(context);
-     }*/
-
     async telegramConfig(context: Context) {
         const {
             rede,
@@ -200,24 +168,24 @@ export class Telegram {
         const getbool = (value: boolean) => (value ? "Yes" : "No");
 
         const html =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
-            `<b>Network</b>: ${rede}\n` +
-            `<b>Alert shield</b>: ${alertShield}\n` +
-            `<b>Heroes select at home</b>: ${houseHeroes
+            `Account: ${this.bot.getIdentify()}\n\n` +
+            `:globe_with_meridians:<b>Network</b>: ${rede}\n` +
+            `<b>:bellhop_bell: :bellhop:Alert shield</b>: ${alertShield}\n` +
+            `<b>:house:Heroes select at home</b>: ${houseHeroes
                 .split(":")
                 .join(", ")}\n` +
-            `<b>Percentage of hero life to work</b>: ${minHeroEnergyPercentage}%\n` +
-            `<b>Qty of heroes to work</b>: ${numHeroWork}\n` +
-            `<b>Server</b>: ${server}\n` +
-            //`<b>Telegram chat ID</b>: ${telegramChatId}\n` +
-            //`<b>Telegram KEY</b>: ${telegramKey}\n` +
+            `<b>:bar_chart:Percentage of hero life to work</b>: ${minHeroEnergyPercentage}%\n` +
+            `<b>:crossed_swords:Qty of heroes to work</b>: ${numHeroWork}\n` +
+            `<b>:computer:Server</b>: ${server}\n` +
+            `<b>Telegram chat ID</b>: ${telegramChatId}\n` +
+            `<b>:key:Telegram KEY</b>: ${telegramKey}\n` +
             `<b>Check telegram chat id</b>: ${getbool(telegramChatIdCheck)}\n` +
             `<b>Alert material</b>: ${alertMaterial}\n` +
             `<b>Max gas reset shield</b>: ${maxGasRepairShield || "No"}\n` +
             `<b>Report rewards</b>: ${
                 reportRewards ? reportRewards + " min" : "No"
             }\n` +
-            `<b>Auto reset shield</b>: ${getbool(resetShieldAuto)}\n` +
+            `<b>:shield:Auto reset shield</b>: ${getbool(resetShieldAuto)}\n` +
             `<b>Ignore qty hero work</b>: ${getbool(ignoreNumHeroWork)}\n` +
             `<b>Type login</b>: ${type}\n` +
             `<b>Bomb version</b>: ${version}`;
@@ -229,22 +197,13 @@ export class Telegram {
 
         if (!this.bot.shouldRun) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nAccount not working`
+                `Account: ${this.bot.getIdentify()}\n\nAccount not working`
             );
             return;
         }
 
         const message = await this.getStatsAccount();
         await context.replyWithHTML(message);
-    }
-    // MINHAS MODIFICAÇÕES
-    async telegramPool(context: Context) {
-        const result = await this.bot.client.poolBomb();
-        const html =
-           `🔰Account : ${this.bot.getIdentify()}\n\n` +
-           `🛀Pool Bomb: ${parseFloat(result).toFixed(2)}`;
-  
-        context.replyWithHTML(html);
     }
 
     public async getStatsAccount() {
@@ -256,13 +215,9 @@ export class Telegram {
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
             if (isSelectedAtHome) {
-                //MINHAS ALTERAÇÕES - COR RARIDADE
-                let corRaridade = this.getColor(hero.rarityIndex);
-                return `<b>${corRaridade} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}</b>`;
+                return `<b>${hero.rarity} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}</b>`;
             } else {
-                //MINHAS ALTERAÇÕES - COR RARIDADE
-                let corRaridade = this.getColor(hero.rarityIndex);
-                return `${corRaridade} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}`;
+                return `${hero.rarity} [${hero.id}]: ${hero.energy}/${hero.maxEnergy} | ${shield}`;
             }
         };
 
@@ -288,22 +243,22 @@ export class Telegram {
         const houseHeroesIds = this.bot.houseHeroes.join(", ");
 
         const message =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
-            `🕹️Playing mode: ${this.bot.getStatusPlaying()}\n` +
+            `Account: ${this.bot.getIdentify()}\n\n` +
+            `Playing mode: ${this.bot.getStatusPlaying()}\n\n` +
             // `Adventure heroes: ${heroesAdventure.usedHeroes.length}/${heroesAdventure.allHeroes.length}\n` +
             // `Heroes selected for adventure: ${heroesAdventureSelected}\n` +
             msgEnemies +
-            `🌐Network: ${this.bot.client.loginParams.rede}\n\n` +
+            `Network: ${this.bot.client.loginParams.rede}\n` +
             `Treasure/Amazon:\n` +
-            `- 🗺️${this.bot.map.toString()}\n\n` +
-            `🏠Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
-            `\nRemaining chest (Amazon): \n${this.bot.map
+            `${this.bot.map.toString()}\n` +
+            `Heroes selected for home(${this.bot.houseHeroes.length}): ${houseHeroesIds}\n` +
+            `Remaining chest (Amazon): \n${this.bot.map
                 .formatMsgBlock()
                 .join("\n")}\n\n` +
-            `ℹ️: ⚡LIFE HERO | 🛡️SHIELD HERO\n\n` +
-            `👷‍♂️Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
-            `💤Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
-            `🏠Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
+            `INFO: LIFE HERO | SHIELD HERO\n` +
+            `Working heroes (${this.bot.workingSelection.length}): \n${workingHeroesLife}\n\n` +
+            `Resting heroes (${this.bot.sleepingSelection.length}): \n${notWorkingHeroesLife}\n\n` +
+            `Resting heroes at home (${this.bot.homeSelection.length}): \n${homeHeroesLife}`;
 
         return message;
     }
@@ -313,20 +268,16 @@ export class Telegram {
             (v) => v.indexOf("heroZeroShield") !== -1
         ).length;
     }
-    /************MINHAS ALTERAÇÕES******************** */
-    public getTotalMaterial(){
-         const material = this.bot.client.web3GetRock();
-         return material;
-    }
+
     async telegramRewardsAll(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
         const resultDb = this.bot.db.getAllDatabase();
 
         const html = `
-<b>💰Rewards</b>
+<b>Rewards</b>
 
-Bcoin | 💣Jaulas | 💀Shield | 🪨 Material | 📈 Media
+Bcoin | Bomberman | heroes with zero shield | time last update UTC 0
 
 ${resultDb
     .filter((v) => v.rewards)
@@ -334,7 +285,6 @@ ${resultDb
         const date = new Date(account.rewards.date);
         const username = account.username;
         const zeroShield = this.getTotalHeroZeroShield(account);
-        
         const bcoin = account.rewards.values
             .find(
                 (v: any) =>
@@ -353,11 +303,8 @@ ${resultDb
             .getMinutes()
             .toString()
             .padStart(2, "0")}`;
-        
-        //minhas alterações
-        //let m = this.getTotalMaterial();
-/************************************************************* */
-        return `<b>🔰Account: ${username}</b>:\n💰${bcoin} | 💣${bomberman} | 💀${zeroShield}\n`; //| 🪨${m}\n`;//${dateStr}\n`;
+
+        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
     })
     .join("\n")}`;
 
@@ -371,7 +318,7 @@ ${resultDb
             await context.replyWithHTML(`${message}\nMaterial: ${material}`);
         } catch (e) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nNot connected, please wait`
+                `Account: ${this.bot.getIdentify()}\n\nNot connected, please wait`
             );
         }
     }
@@ -383,7 +330,7 @@ ${resultDb
             await this.bot.db.set("report", date);
         } catch (e) {
             await this.sendMessageChat(
-                `🔰Account: ${this.bot.getIdentify()}\n\nNot connected, please wait`
+                `Account: ${this.bot.getIdentify()}\n\nNot connected, please wait`
             );
         }
     }
@@ -393,10 +340,10 @@ ${resultDb
             // const detail = await this.client.coinDetail();
 
             const message =
-                "🔰Account: " +
+                "Account: " +
                 this.bot.getIdentify() +
                 "\n\n" +
-                "💰Rewards:\n" +
+                "Rewards:\n" +
                 // `Mined: ${detail.mined} | Invested: ${detail.invested} ` +
                 // `| Rewards: ${detail.rewards}\n` +
                 rewards
@@ -424,13 +371,13 @@ ${resultDb
     async telegramExit(context: Context) {
         if (this.bot.isResettingShield) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nIt is not possible to finalize at the moment, there is a web3 transaction being executed at the moment`
+                `Account: ${this.bot.getIdentify()}\n\nIt is not possible to finalize at the moment, there is a web3 transaction being executed at the moment`
             );
             return;
         }
 
         await context.replyWithHTML(
-            `🔰Account: ${this.bot.getIdentify()}\n\nExiting in 10 seconds...`
+            `Account: ${this.bot.getIdentify()}\n\nExiting in 10 seconds...`
         );
         await this.bot.sleepAllHeroes();
         this.bot.shouldRun = false;
@@ -442,25 +389,18 @@ ${resultDb
     async telegramStart(context: Context) {
         await this.bot.db.set("start", true);
         await context.replyWithHTML(
-            `🔰Account: ${this.bot.getIdentify()}\n\nstating...`
+            `Account: ${this.bot.getIdentify()}\n\nstating...`
         );
         await sleep(10000);
         await this.telegraf?.stop("SIGINT");
         throw new Error("exit");
     }
-    //MINHAS ALTERAÇÕES RARIDADE POR COR
-    getColor( Index : number) {
-        const types = ["⚪", "🟢", "🔵", "🟣", "🟡", "🔴"];
-        const cor = types[Index];
-        return cor;
-     }
-     
     async telegramStatsShield(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
         if (!this.bot.shouldRun) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nAccount not working`
+                `Account: ${this.bot.getIdentify()}\n\nAccount not working`
             );
             return;
         }
@@ -471,13 +411,10 @@ ${resultDb
             const shield = hero.shields?.length
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
-
-                let corRaridade = this.getColor(hero.rarityIndex);
-
-            return `${corRaridade} [${hero.id}]: ${shield}`;
+            return `${hero.rarity} [${hero.id}]: ${shield}`;
         };
         let message =
-            "⚠️Account not connected, wait the bot will try to connect again";
+            "Account not connected, wait the bot will try to connect again";
         const result = this.bot.squad.heroes;
 
         if (result && result.length) {
@@ -492,11 +429,11 @@ ${resultDb
                 .join("\n");
 
             message =
-                `🔰Account: ${this.bot.getIdentify()}\n\n` +
-                `🛡️Shield heroes (${result.length}): \n\n${heroes}`;
+                `Account: ${this.bot.getIdentify()}\n\n` +
+                `Shield heroes (${result.length}): \n\n${heroes}`;
 
             if (material !== null) {
-                message += `\n\n🪨 Material:${material}`;
+                message += `\n\nMaterial:${material}`;
             }
         }
 
@@ -509,38 +446,19 @@ ${resultDb
         return list.filter((v) => v >= dateStart).length;
     }
 
-    //MINHAS ALTERAÇÕES
-    async getMediaDiaria(context:Context){
-        let value = await this.bot.currentCalcFarm();
-        if (!value) {
-            return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nFarm calculation was not previously started`
-            );
-        }
-        let xdateStart = value.start.date;
-        let xdateEnd = value.current.date;
-        let xbcoinStart = value.start.bcoin;
-        let xbcoinEnd = value.current.bcoin;
-        let xtotalBcoin = xbcoinEnd - xbcoinStart;
-        //const totalMap = await this.getTotalMap(dateStart);
-        const xdiffmin = differenceInMinutes(xdateEnd, xdateStart);
-        const xdiffHours = xdiffmin / 60;
-        return (xtotalBcoin / xdiffHours)*24;
-
-    }
     async telegramStopCalcFarm(context: Context, stop = true) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
         if (!this.bot.shouldRun || !this.bot.client.isLoggedIn) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nAccount not working`
+                `Account: ${this.bot.getIdentify()}\n\nAccount not working`
             );
             return;
         }
         const value = await this.bot.currentCalcFarm();
         if (!value) {
             return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nFarm calculation was not previously started`
+                `Account: ${this.bot.getIdentify()}\n\nFarm calculation was not previously started`
             );
         }
         const dateStart = value.start.date;
@@ -554,7 +472,7 @@ ${resultDb
 
         if (diffmin == 0) {
             return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nwait at least 1 minute`
+                `Account: ${this.bot.getIdentify()}\n\nwait at least 1 minute`
             );
         }
 
@@ -566,29 +484,28 @@ ${resultDb
         let totalAverageMap = totalMap / diffmin;
         let totalAverageHour = totalBcoin / diffmin;
         let description =
-            `💵 <b>Total minutes:</b> ${diffmin.toFixed(2)}\n` +
-            `═ Average per minute: ${totalAverageHour.toFixed(2)}\n` +
-            `═ Average per day: ${(totalAverageHour * 1440).toFixed(2)}\n` +
-            `═ Average map per minute: ${totalAverageMap.toFixed(2)}`;
+            `Total minutes: ${diffmin.toFixed(2)}\n` +
+            `Average per minute: ${totalAverageHour.toFixed(2)}\n` +
+            `Average per day: ${(totalAverageHour * 1440).toFixed(2)}\n` +
+            `Average map per minute: ${totalAverageMap.toFixed(2)}`;
         if (diffHours > 1) {
             totalAverageHour = totalBcoin / diffHours;
             totalAverageMap = totalMap / diffHours;
             description =
-                `💵 <b>Total hours:</b> ${diffHours.toFixed(2)}\n` +
-                `═ Average per hour: ${totalAverageHour.toFixed(2)}\n` +
-                `═ Average per day: ${(totalAverageHour * 24).toFixed(2)}\n` +
-                `═ Average map per hour: ${totalAverageMap.toFixed(2)}`;
+                `Total hours: ${diffHours.toFixed(2)}\n` +
+                `Average per hour: ${totalAverageHour.toFixed(2)}\n` +
+                `Average per day: ${(totalAverageHour * 24).toFixed(2)}\n` +
+                `Average map per hour: ${totalAverageMap.toFixed(2)}`;
         }
 
         const html =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
-            `<b>Calc Farm:</b>\n\n`+
-            `═ Date start: ${formatDate(new Date(dateStart))}\n` +
-            `═ Date end: ${formatDate(new Date(dateEnd))}\n\n` +
-            `═ BombCoin start: ${bcoinStart.toFixed(2)}\n` +
-            `═ BombCoin end: ${bcoinEnd.toFixed(2)}\n\n` +
-            `═ Total BombCoin: ${totalBcoin.toFixed(2)}\n` +
-            `═ Total maps: ${totalMap}\n\n` +
+            `Account: ${this.bot.getIdentify()}\n\n` +
+            `Date start: ${formatDate(new Date(dateStart))}\n` +
+            `Date end: ${formatDate(new Date(dateEnd))}\n\n` +
+            `Bcoin start: ${bcoinStart.toFixed(2)}\n` +
+            `Bcoin end: ${bcoinEnd.toFixed(2)}\n\n` +
+            `Total bcoin: ${totalBcoin.toFixed(2)}\n` +
+            `Total maps: ${totalMap}\n\n` +
             description;
 
         context.replyWithHTML(html);
@@ -598,7 +515,7 @@ ${resultDb
             await this.bot.notification.hasUpdateVersion();
         if (existNotification) {
             const message =
-                "⚠️Please update your code version, run yarn start on your computer, and execute in your telegram /start";
+                "Please update your code version, run yarn start on your computer, and execute in your telegram /start";
             context.replyWithHTML(message);
             return false;
         }
@@ -607,26 +524,26 @@ ${resultDb
     async telegramAverageGasPolygon(context: Context) {
         const result = await this.bot.getAverageWeb3Transaction();
         const html =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
+            `Account: ${this.bot.getIdentify()}\n\n` +
             `The values below are an average of how much it would cost right now\n\n` +
-            `🏦Claim: ${result.claim}\n` +
-            `🛡️Reset Shield: ${result.resetShield}`;
+            `Claim: ${result.claim}\n` +
+            `Reset Shield: ${result.resetShield}`;
 
         context.replyWithHTML(html);
     }
     async telegramWallet(context: Context) {
         if (this.bot.loginParams.type == "user") {
             return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
+                `Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
             );
         }
 
         const result = await this.bot.getWalletBalance();
         const html =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
-            `🪙MATIC: ${result.matic}\n` +
-            `💵USDT: ${result.usdt}\n` +
-            `🪙BOMB: ${result.bomb}\n`;
+            `Account: ${this.bot.getIdentify()}\n\n` +
+            `MATIC: ${result.matic}\n` +
+            `USDT: ${result.usdt}\n` +
+            `BOMB: ${result.bomb}\n`;
 
         context.replyWithHTML(html);
     }
@@ -634,31 +551,29 @@ ${resultDb
         try {
             const { maxGasRepairShield } = this.bot.params;
 
-            //const hero = this.bot.squad.heroes.find((h) => h.id == heroId);
-            
-            const hero = this.bot.squad.activeHeroes.find((h) => h.id == heroId);
+            const hero = this.bot.squad.heroes.find((h) => h.id == heroId);
             if (!hero) return;
 
             if (!this.bot.client.isConnected) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nAccount not connected, please wait`
+                    `Account: ${this.bot.getIdentify()}\n\nAccount not connected, please wait`
                 );
             }
 
             if (this.bot.isResettingShield) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nThere is already another hero resetting the shield at the moment`
+                    `Account: ${this.bot.getIdentify()}\n\nThere is already another hero resetting the shield at the moment`
                 );
             }
             if (this.bot.loginParams.type == "user") {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
+                    `Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
                 );
             }
 
             if (this.bot.loginParams.rede != "POLYGON") {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed for POLYGON`
+                    `Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed for POLYGON`
                 );
             }
 
@@ -666,7 +581,7 @@ ${resultDb
 
             if (!lastTransactionWeb3) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nyou currently have an ongoing transaction in your wallet`
+                    `Account: ${this.bot.getIdentify()}\n\nyou currently have an ongoing transaction in your wallet`
                 );
             }
 
@@ -675,27 +590,27 @@ ${resultDb
 
             if (hero.rockRepairShield > currentRock) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\n⚠Attention\nNot enough material, needed 🪨${
+                    `Account: ${this.bot.getIdentify()}\n\nNot enough material, needed ${
                         hero.rockRepairShield
-                    }, you have 🪨${currentRock}`
+                    }, you have ${currentRock}`
                 );
             }
 
-            if (maxGasRepairShield > 0 && gas.resetShield > maxGasRepairShield) {
+            if (
+                maxGasRepairShield > 0 &&
+                gas.resetShield > maxGasRepairShield
+            ) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nYou configured to spend a maximum of ${maxGasRepairShield} on the transaction, at the moment ${
+                    `Account: ${this.bot.getIdentify()}\n\nYou configured to spend a maximum of ${maxGasRepairShield} on the transaction, at the moment ${
                         gas.resetShield
                     } is being charged`
                 );
             }
-//******************************************************************************* */
+
             await this.bot.resetShield(hero);
-            this.bot.setIsFarmTrue();
-            /*await this.bot.client.syncBomberman();
-            await sleep(30000);
             await this.bot.client.syncBomberman();
             await sleep(5000);
-            await this.bot.client.getActiveHeroes();*/
+            await this.bot.client.getActiveHeroes();
         } catch (e: any) {
             context.replyWithHTML(e.message);
         }
@@ -705,12 +620,12 @@ ${resultDb
         try {
             if (this.bot.loginParams.type == "user") {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
+                    `Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed when logging in with the wallet`
                 );
             }
             if (this.bot.loginParams.rede != "POLYGON") {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed for POLYGON`
+                    `Account: ${this.bot.getIdentify()}\n\nFunctionality only allowed for POLYGON`
                 );
             }
 
@@ -718,7 +633,7 @@ ${resultDb
 
             if (!lastTransactionWeb3) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nyou currently have an ongoing transaction in your wallet`
+                    `Account: ${this.bot.getIdentify()}\n\nyou currently have an ongoing transaction in your wallet`
                 );
             }
 
@@ -731,12 +646,12 @@ ${resultDb
             if (!bcoin) return;
             if (bcoin.value + bcoin.claimPending < 40) {
                 return context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nMinimum amount of 40 bcoin`
+                    `Account: ${this.bot.getIdentify()}\n\nMinimum amount of 40 bcoin`
                 );
             }
 
             context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nStarting withdraw ${
+                `Account: ${this.bot.getIdentify()}\n\nStarting withdraw ${
                     bcoin.value + bcoin.claimPending
                 }`
             );
@@ -754,45 +669,45 @@ ${resultDb
                     );
 
                 context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nYou withdraw ${received} Bcoin`
+                    `Account: ${this.bot.getIdentify()}\n\nYou withdraw ${received} Bcoin`
                 );
                 await this.telegramStartCalcFarm(context);
             } else {
                 context.replyWithHTML(
-                    `🔰Account: ${this.bot.getIdentify()}\n\nfailed`
+                    `Account: ${this.bot.getIdentify()}\n\nfailed`
                 );
             }
         } catch (e: any) {
             return context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\nError: ${e.message}`
+                `Account: ${this.bot.getIdentify()}\n\nError: ${e.message}`
             );
         }
     }
     async telegramTestMsg(context: Context) {
         await context.replyWithHTML(
-            'if you receive message below "TESTE", it means that your TELEGRAM_CHAT_ID is working, TELEGRAM_CHAT_ID: ' +
+            'if you receive message below "ARROMBADO", it means that your TELEGRAM_CHAT_ID is working, TELEGRAM_CHAT_ID: ' +
                 this.bot.params.telegramChatId
         );
 
-        this.sendMessageChat("TESTE");
+        this.sendMessageChat("ARROMBADO");
     }
     async telegramStartCalcFarm(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;
 
         if (!this.bot.shouldRun || !this.bot.client.isLoggedIn) {
             await context.replyWithHTML(
-                `🔰Account: ${this.bot.getIdentify()}\n\n⚠️Account not working`
+                `Account: ${this.bot.getIdentify()}\n\nAccount not working`
             );
             return;
         }
 
         const value = await this.bot.startCalcFarm();
         const html =
-            `🔰Account: ${this.bot.getIdentify()}\n\n` +
+            `Account: ${this.bot.getIdentify()}\n\n` +
             `This command is for you to see a farm calculation from this moment on\n\n` +
             `Date: ${formatDate(new Date(value.date))}\n` +
             `Bcoin: ${value.bcoin.toFixed(2)}\n\n` +
-            `to terminate and see the final result, type <b>/stop_calc_farm</b>`;
+            `to terminate and see the final result, type /stop_calc_farm`;
 
         context.replyWithHTML(html);
     }
@@ -801,7 +716,7 @@ ${resultDb
 
         return this.telegraf?.telegram.sendMessage(
             this.bot.params.telegramChatId,
-            `🔰Account: ${this.bot.getIdentify()}\n\n${message}`
+            `Account: ${this.bot.getIdentify()}\n\n${message}`
         );
     }
 }
