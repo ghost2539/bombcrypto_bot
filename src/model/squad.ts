@@ -57,6 +57,11 @@ export class Squad {
         hero.updateEnergy(params.energy);
     }
 
+    updateHeroShield(params: Hero) {
+        const hero = this.byId(params.id);
+        hero.updateShields(params.shields);
+    }
+    
     updateHeroState(heroId: number, state: EHeroState) {
         const hero = this.byId(heroId);
         hero.setState(state);

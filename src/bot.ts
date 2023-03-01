@@ -536,6 +536,7 @@ export class TreasureMapBot {
 
     async refreshHeroSelection() {
         logger.info("Refreshing heroes");
+        await this.client.syncBomberman();
         await this.client.getActiveHeroes();
         const { ignoreNumHeroWork } = this.params;
 
@@ -633,6 +634,11 @@ export class TreasureMapBot {
         this.locationByHeroWorking.set(hero.id, selected);
         return selected;
     }
+
+   async syncBomberman() {
+      const heroesParse = await this.client.syncBomberman();
+      return heroesParse.map(parseGetActiveBomberPayload).map(buildHero);
+   }
 
     canPlaceBomb(hero: Hero, location: IMapTile) {
         const entry = this.explosionByHero.get(hero.id);
@@ -1125,9 +1131,15 @@ export class TreasureMapBot {
             );
             const transaction = await this.client.web3ResetShield(hero);
             this.lastTransactionWeb3 = transaction.transactionHash;
-
+            await sleep(1000);
             currentRock = await this.client.web3GetRock();
 
+            const heroes = await this.syncBomberman();
+            const heroUpdated = heroes.find((h) => h.id == hero.id);
+            if (heroUpdated) {
+                this.squad.updateHeroShield(heroUpdated);
+            }
+            
             await this.telegram.sendMessageChat(
                 `Hero ${hero.id} shield has been repaired\n\nYou have ${currentRock} of material`
             );
