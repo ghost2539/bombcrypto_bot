@@ -303,8 +303,9 @@ ${resultDb
             .getMinutes()
             .toString()
             .padStart(2, "0")}`;
+        const material = account.currentRock;
 
-        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
+        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr} | ${material}`;
     })
     .join("\n")}`;
 
