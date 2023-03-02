@@ -206,6 +206,11 @@ export class Telegram {
         await context.replyWithHTML(message);
     }
 
+    getColor({ rarityIndex }: Hero) {
+        const types = ["⚪", "🟢", "🔵", "🟣", "🟡", "🔴"];
+        return types[rarityIndex];
+    }
+
     public async getStatsAccount() {
         const formatMsg = (hero: Hero) => {
             const isSelectedAtHome = this.bot.houseHeroes.includes(
@@ -412,7 +417,12 @@ ${resultDb
             const shield = hero.shields?.length
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
-            return `${hero.rarity} [${hero.id}]: ${shield}`;
+            const materialneeded = hero.rockRepairShield;
+            let alert =``;
+            if (hero.shields[0].current <= this.bot.params.minHeroEnergyPercentage){
+                alert = `⚠️`;
+            }
+            return `${this.getColor(hero)} [${hero.id}]: ${shield} [${materialneeded}] ${alert}`;
         };
         let message =
             "Account not connected, wait the bot will try to connect again";
@@ -431,7 +441,7 @@ ${resultDb
 
             message =
                 `Account: ${this.bot.getIdentify()}\n\n` +
-                `Shield heroes (${result.length}): \n\n${heroes}`;
+                `🛡Shield heroes (${result.length}): \n\n${heroes}`;
 
             if (material !== null) {
                 message += `\n\nMaterial:${material}`;
