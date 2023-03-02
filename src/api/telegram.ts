@@ -308,9 +308,9 @@ ${resultDb
             .getMinutes()
             .toString()
             .padStart(2, "0")}`;
-        const material = account.currentRock;
+        //const material = account.currentRock;
 
-        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr} | ${material}`;
+        return `<b>${username}</b>:  ${bcoin} | ${bomberman} | ${zeroShield} | ${dateStr}`;
     })
     .join("\n")}`;
 
@@ -417,7 +417,7 @@ ${resultDb
             const shield = hero.shields?.length
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
-                
+
             const materialneeded = hero.rockRepairShield;
             return `${this.getColor(hero)} [${hero.id}]: ${shield} [${materialneeded}]`;
         };
@@ -693,11 +693,11 @@ ${resultDb
     }
     async telegramTestMsg(context: Context) {
         await context.replyWithHTML(
-            'if you receive message below "ARROMBADO", it means that your TELEGRAM_CHAT_ID is working, TELEGRAM_CHAT_ID: ' +
+            'if you receive message below "TESE", it means that your TELEGRAM_CHAT_ID is working, TELEGRAM_CHAT_ID: ' +
                 this.bot.params.telegramChatId
         );
 
-        this.sendMessageChat("ARROMBADO");
+        this.sendMessageChat("TESTE");
     }
     async telegramStartCalcFarm(context: Context) {
         if (!(await this.telegramCheckVersion(context))) return false;

@@ -519,7 +519,14 @@ export class TreasureMapBot {
             );
             this.notification.setHeroShield(hero.id, this.getSumShield(hero));
         }
-        logger.info(`Hero ${hero.id} needs shield repair`);
+        const material = await this.client.web3GetRock();
+        const needed = hero.rockRepairShield;
+        const color = this.telegram.getColor(hero);
+        logger.info(
+            `Hero ${color}${hero.id} needs shield repair\n`+
+            `- You have ${material} of material\n`+
+            `- You need ${needed} of material`
+        );
     }
     async alertMaterial(material: number) {
         if (!(await this.notification.hasMaterial())) {
