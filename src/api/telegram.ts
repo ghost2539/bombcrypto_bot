@@ -417,12 +417,9 @@ ${resultDb
             const shield = hero.shields?.length
                 ? `${hero.shields[0].current}/${hero.shields[0].total}`
                 : "empty shield";
+                
             const materialneeded = hero.rockRepairShield;
-            let alert =``;
-            if (hero.shields[0].current <= this.bot.params.minHeroEnergyPercentage){
-                alert = `⚠️`;
-            }
-            return `${this.getColor(hero)} [${hero.id}]: ${shield} [${materialneeded}] ${alert}`;
+            return `${this.getColor(hero)} [${hero.id}]: ${shield} [${materialneeded}]`;
         };
         let message =
             "Account not connected, wait the bot will try to connect again";
