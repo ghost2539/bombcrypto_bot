@@ -415,11 +415,22 @@ ${resultDb
 
         const formatMsg = (hero: Hero) => {
             const shield = hero.shields?.length
-                ? `${hero.shields[0].current}/${hero.shields[0].total}`
+                ? `${hero.shields[0].current}🪫/${hero.shields[0].total}🔋`
                 : "empty shield";
+                
+            const cur = hero.shields?.length
+                ? `${hero.shields[0].current}`
+                : "empty shield";
+            
+            let alert = "✅";
+            if (cur !== "empty shield") {
+                const curNumber = parseInt(cur);
+                if (curNumber < this.bot.params.alertShield)
+                {alert = "⚠️"}
+            }
 
             const materialneeded = hero.rockRepairShield;
-            return `${this.getColor(hero)} [${hero.id}]: ${shield} [${materialneeded}]`;
+            return `${alert} ${this.getColor(hero)} [${hero.id}]: ${shield} (${materialneeded})🪨`;
         };
         let message =
             "Account not connected, wait the bot will try to connect again";
