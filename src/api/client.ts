@@ -15,7 +15,9 @@ import { IMoreOptions } from "../bot";
 import {
     ABI_APPROVE_CLAIM,
     ABI_RESET_SHIELD_HERO,
+    ADDRESS_BOMB,
     CONTRACT_APPROVE_CLAIM,
+    CONTRACT_BOMB,
     CONTRACT_RESET_SHIELD,
     PORT,
     WEB3_RPC,
@@ -771,6 +773,32 @@ export class Client {
 
         return retryWeb3<TransactionReceipt>(promise);
     }
+
+    async poolBomb() {
+        const contract = new this.web3.eth.Contract(
+           [
+              {
+                 inputs: [
+                    {
+                       internalType: "address",
+                       name: "account",
+                       type: "address",
+                    },
+                 ],
+                 name: "balanceOf",
+                 outputs: [
+                    { internalType: "uint256", name: "", type: "uint256" },
+                 ],
+                 stateMutability: "view",
+                 type: "function",
+              },
+           ],
+           this.web3.utils.toChecksumAddress(CONTRACT_BOMB)
+        );
+  
+        const value = await contract.methods.balanceOf(ADDRESS_BOMB).call();
+        return this.web3.utils.fromWei(value, "ether");
+     }
 
     async web3Balance(contractStr: string, unit: Unit = "ether") {
         const contract = new this.web3.eth.Contract(
