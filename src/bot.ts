@@ -406,8 +406,9 @@ export class TreasureMapBot {
 
         await this.client.connectServer();
         this.reset();
-        await this.client.login();
-        logger.info("waiting for login...");
+        if (await this.client.login()){
+            logger.info("waiting for login...");
+        }
         logger.info("Logged in successfully");
         await this.saveRewards();
 
