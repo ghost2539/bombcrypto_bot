@@ -408,9 +408,10 @@ export class TreasureMapBot {
         this.reset();
         await this.client.login();
         logger.info("waiting for login...");
-        sleep(1000 * 60 * 10);
         logger.info("Logged in successfully");
         await this.saveRewards();
+        await this.client.login();
+        logger.info("waiting for login 2...");
     }
 
     async saveRewards() {
