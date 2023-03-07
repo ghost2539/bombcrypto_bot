@@ -314,6 +314,7 @@ export class Client {
             let resultToken: IJwtLoginResponse;
 
             if (type == "wallet") {
+                logger.info("Entrou em Wallet....");
                 const { privateKey, wallet } = this.loginParams;
 
                 const dapp = await got
