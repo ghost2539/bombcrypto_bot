@@ -326,7 +326,8 @@ export class Client {
                         }
                     )
                     .json<{ message: string }>();
-                logger.info("Entrou em dapp...."+dapp);
+                const dapp2 = dapp.toString();
+                logger.info("Entrou em dapp...."+dapp2);
                 const signature = makeLoginSignature(privateKey, dapp.message);
 
                 resultToken = await got

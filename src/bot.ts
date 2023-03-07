@@ -1038,7 +1038,7 @@ export class TreasureMapBot {
             await this.client.getActiveHeroes();
         }
     }
-
+//**********************L O O P******************************* */
     async loop() {
         this.shouldRun = true;
         connectWebSocketAnalytics(this).catch((e) => {
@@ -1048,8 +1048,8 @@ export class TreasureMapBot {
         await this.checkVersion();
         await this.logIn();
         this.sendPing();
-        //await this.loadHouses();
-        //await this.refreshMap();
+        await this.loadHouses();
+        await this.refreshMap();
 
         logger.info("Opening map...");
         this.playing = this.params.modeAmazon ? "Amazon" : "Treasure";
