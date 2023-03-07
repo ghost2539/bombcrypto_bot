@@ -1047,7 +1047,7 @@ export class TreasureMapBot {
         await this.checkVersion();
         await this.logIn();
         this.sendPing();
-        await this.loadHouses();
+        //await this.loadHouses();
         await this.refreshMap();
 
         logger.info("Opening map...");

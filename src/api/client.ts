@@ -314,18 +314,19 @@ export class Client {
             let resultToken: IJwtLoginResponse;
 
             if (type == "wallet") {
-                logger.info("Entrou em Wallet....");
                 const { privateKey, wallet } = this.loginParams;
 
                 const dapp = await got
                     .get(
                         `https://api.bombcrypto.io/gateway/auth/dapp/token?address=${wallet}`,
                         {
+
                             headers: this.apiBaseHeaders,
+
                         }
                     )
                     .json<{ message: string }>();
-
+                logger.info("Entrou em dapp...."+dapp);
                 const signature = makeLoginSignature(privateKey, dapp.message);
 
                 resultToken = await got
@@ -340,7 +341,9 @@ export class Client {
                         }
                     )
                     .json<IJwtLoginResponse>();
+                logger.info("Entrou em result token...."+resultToken);
                 this.loginParams.signature = signature;
+                logger.info("Entrou em signature...."+signature);
             } else {
                 const { password, username } = this.loginParams;
                 resultToken = await got
