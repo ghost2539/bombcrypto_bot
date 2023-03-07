@@ -412,6 +412,7 @@ export class Client {
         //     message = data.message;
         // }
         await this.getJwtToken();
+        logger.info("JwtToken .....");
         await this.connect();
         logger.info(`Network: ${this.loginParams.rede}`);
         return await makeUniquePromise(
