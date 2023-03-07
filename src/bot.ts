@@ -410,12 +410,14 @@ export class TreasureMapBot {
         logger.info("waiting for login...");
         logger.info("Logged in successfully");
         await this.saveRewards();
-        await this.client.login();
-        logger.info("waiting for login 2...");
+
     }
 
     async saveRewards() {
-        if (!this.params.saveRewardsCsv) return;
+        if (!this.params.saveRewardsCsv)
+        { 
+            logger.info("NOT SAVE REWARDS CSV");
+            return;}
         logger.info("Save rewards in csv...");
         let user = "nameuser";
         if ("username" in this.client.loginParams) {
