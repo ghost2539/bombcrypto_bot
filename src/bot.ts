@@ -1003,7 +1003,7 @@ export class TreasureMapBot {
     }
 
     sendPing() {
-        setInterval(() => this.client.ping(), 1000 * 10);
+        setInterval(() => this.client.ping(), 1000 * 50);
     }
     async registerNewMap() {
         try {
@@ -1047,7 +1047,7 @@ export class TreasureMapBot {
         await this.checkVersion();
         await this.logIn();
         this.sendPing();
-        //await this.loadHouses();
+        await this.loadHouses();
         await this.refreshMap();
 
         logger.info("Opening map...");
