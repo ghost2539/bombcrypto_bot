@@ -414,16 +414,14 @@ export class TreasureMapBot {
     }
 
     async saveRewards() {
-        if (!this.params.saveRewardsCsv)
-        { 
-            logger.info("NOT SAVE REWARDS CSV");
-            return;}
+        if (!this.params.saveRewardsCsv) return;
         logger.info("Save rewards in csv...");
         let user = "nameuser";
         if ("username" in this.client.loginParams) {
             user = this.client.loginParams.username;
         } else if ("wallet" in this.client.loginParams) {
             user = this.client.loginParams.wallet;
+            logger.info("parametros de wallet informado...");
         }
         const name = `./csv/${user}.csv`;
         const rewards = await this.client.getReward();
