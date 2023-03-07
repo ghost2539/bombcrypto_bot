@@ -342,7 +342,7 @@ export class Client {
                         }
                     )
                     .json<IJwtLoginResponse>();
-                logger.info("Entrou em result token...."+resultToken);
+                logger.info("Entrou em result token...."+resultToken.message+" "+resultToken.statusCode);
                 this.loginParams.signature = signature;
                 logger.info("Entrou em signature...."+signature);
             } else {
