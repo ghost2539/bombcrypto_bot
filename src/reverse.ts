@@ -10,8 +10,8 @@ type SmartFoxExtended = SmartFox & {
 
 // A dummy server
 const SFS = new SmartFox({
-    host: "server.polygon.bombcrypto.io",
-    //host: "server-sea.bombcrypto.io",
+    //host: "server.polygon.bombcrypto.io",
+    host: "server-sea.bombcrypto.io/websocket",
     port: 443,
     zone: "BomberGameZone",
     debug: true,

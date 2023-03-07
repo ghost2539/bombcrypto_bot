@@ -343,9 +343,9 @@ export class Client {
                     )
                     .json<IJwtLoginResponse>();
                 const x = resultToken.message.token.toString();
-                logger.info("Entrou em result token...."+x+" "+resultToken.statusCode);
+                //logger.info("Entrou em result token...."+x+" "+resultToken.statusCode);
                 this.loginParams.signature = signature;
-                logger.info("Entrou em signature...."+signature);
+               // logger.info("Entrou em signature...."+signature);
             } else {
                 const { password, username } = this.loginParams;
                 resultToken = await got
@@ -418,9 +418,7 @@ export class Client {
         //     message = data.message;
         // }
         await this.getJwtToken();
-        logger.info("JwtToken .....");
         await this.connect();
-        logger.info(`Network: ${this.loginParams.rede}`);
         return await makeUniquePromise(
             this.controller.login,
             () => this.sfs.send(makeLoginRequest(this.loginParams)),
