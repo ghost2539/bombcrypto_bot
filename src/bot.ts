@@ -410,6 +410,7 @@ export class TreasureMapBot {
         //logger.info("waiting for login...");
         if (this.client.isLoggedIn){
         logger.info("Logged in successfully");}
+        
         await this.saveRewards();
 
     }

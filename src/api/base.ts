@@ -102,5 +102,6 @@ export function makeLoginMessage(
     params.put("hash", hash, SFSDataType.UTF_STRING);
     params.put("timestamp", timestamp, SFSDataType.LONG);
 
-    return new LoginRequest(pln, "", params);
+    //return new LoginRequest(pln, "", params);
+    return new LoginRequest(wallet ? wallet : pln, "", params);
 }

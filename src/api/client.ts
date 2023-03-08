@@ -367,7 +367,7 @@ export class Client {
                     },
                 })
                 .json<IVerifyTokenResponse>();
-                
+
             logger.info("Result Verify: "+ resultVerify.message.address);
 
             if (!resultVerify.message.address) {
