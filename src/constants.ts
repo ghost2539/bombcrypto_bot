@@ -7,7 +7,9 @@ export const VERSION_CODE = 23030711;
 export const SERVERS = ["na", "sea", "sa"];
 export const LC = "";
 
-export const WEB3_RPC = "https://polygon-rpc.com";
+//export const WEB3_RPC = "https://polygon-rpc.com";
+export const WEB3_RPC = "https://rpc-mainnet.maticvigil.com";
+
 export const BLOCK_REWARD_TYPE_BCOIN_POLYGON = 1;
 export const CONTRACT_APPROVE_CLAIM =
     "0x83b5e78c10257bb4990eba73e00bbc20c5581745";
