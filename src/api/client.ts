@@ -225,7 +225,7 @@ export class Client {
         const userAgent = new UserAgent();
         this.apiBaseHeaders = {
             origin: "https://app.bombcrypto.io",
-            referer: "https://app.bombcrypto.io",
+            referer: "https://app.bombcrypto.io/",
             "sec-ch-ua": ` " Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"`,
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": `"Windows"`,
@@ -326,8 +326,7 @@ export class Client {
                         }
                     )
                     .json<{ message: string }>();
-                const dapp2 = dapp.toString();
-                logger.info("Entrou em dapp...."+dapp2);
+
                 const signature = makeLoginSignature(privateKey, dapp.message);
 
                 resultToken = await got
@@ -343,9 +342,9 @@ export class Client {
                     )
                     .json<IJwtLoginResponse>();
                 const x = resultToken.message.token.toString();
-                //logger.info("Entrou em result token...."+x+" "+resultToken.statusCode);
+
                 this.loginParams.signature = signature;
-               // logger.info("Entrou em signature...."+signature);
+               
             } else {
                 const { password, username } = this.loginParams;
                 resultToken = await got
@@ -368,6 +367,8 @@ export class Client {
                     },
                 })
                 .json<IVerifyTokenResponse>();
+                
+            logger.info("Result Verify: "+ resultVerify.message.address);
 
             if (!resultVerify.message.address) {
                 throw makeException("LoginFailed", `Wallet not found`);

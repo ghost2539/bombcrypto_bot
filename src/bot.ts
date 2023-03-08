@@ -405,10 +405,11 @@ export class TreasureMapBot {
         logger.info("Logging in...");
 
         await this.client.connectServer();
-        this.reset();
+        //this.reset();
         logger.info(await this.client.login());
         //logger.info("waiting for login...");
         logger.info("Logged in successfully");
+        this.reset();
         await this.saveRewards();
 
     }
@@ -1004,7 +1005,7 @@ export class TreasureMapBot {
 
     sendPing() {
         setInterval(() => this.client.ping(), 1000 * 10);
-        logger.info("Send Ping...");
+        logger.info("Send Ping 10 seconds...");
     }
     async registerNewMap() {
         try {
