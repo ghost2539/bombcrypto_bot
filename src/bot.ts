@@ -405,11 +405,11 @@ export class TreasureMapBot {
         logger.info("Logging in...");
 
         await this.client.connectServer();
-        //this.reset();
+        this.reset();
         logger.info(await this.client.login());
         //logger.info("waiting for login...");
-        logger.info("Logged in successfully");
-        this.reset();
+        if (this.client.isLoggedIn){
+        logger.info("Logged in successfully");}
         await this.saveRewards();
 
     }
