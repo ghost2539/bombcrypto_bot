@@ -200,7 +200,7 @@ export const getChatId = (ctx: any) => {
         console.log("nao achou id", e, ctx);
     }
 };
-
+/*
 export const getGasPolygon = async () => {
     const { standard } = await got
         .get(`https://gasstation.polygon.technology`, {
@@ -216,6 +216,24 @@ export const getGasPolygon = async () => {
         }>();
 
     return standard;
+};
+*/
+
+const axios = require('axios');
+
+export const getGasPolygon = async () => {
+    try {
+        const response = await axios.get('https://gasstation.polygon.technology', {
+            headers: { "cache-control": "no-cache" },
+        });
+
+        const { standard } = response.data;
+
+        return standard;
+    } catch (error) {
+        // Trate o erro conforme necessário
+        console.error(error);
+    }
 };
 
 export const retryWeb3 = async <T = unknown>(
