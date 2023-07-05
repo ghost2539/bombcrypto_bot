@@ -428,7 +428,7 @@ ${resultDb
                 .join("\n");
 
             message =
-                'Account: ${this.bot.getIdentify()}\n\n` +
+                `Account: ${this.bot.getIdentify()}\n\n` +
                 `Shield heroes (${result.length}): \n\n${heroes}`;
 
             if (material !== null) {
