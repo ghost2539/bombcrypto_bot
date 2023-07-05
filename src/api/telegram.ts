@@ -57,17 +57,11 @@ export class Telegram {
             this.telegraf?.command("shield", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramStatsShield(ctx))
             );
-            this.telegraf?.command("test_msg", (ctx) =>
-                this.checkChatId(ctx, () => this.telegramTestMsg(ctx))
-            );
             this.telegraf?.command("config", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramConfig(ctx))
             );
             this.telegraf?.command("withdraw", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramWithdraw(ctx))
-            );
-            this.telegraf?.command("gas_polygon", (ctx) =>
-                this.checkChatId(ctx, () => this.telegramAverageGasPolygon(ctx))
             );
             this.telegraf?.command("wallet", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramWallet(ctx))
@@ -83,7 +77,6 @@ export class Telegram {
                 { command: "exit", description: "exit" },
                 { command: "start", description: "start" },
                 { command: "rewards", description: "rewards" },
-                { command: "rewards_all", description: "rewards_all" },
                 { command: "shield", description: "shield" },
                 { command: "stats", description: "stats" },
                 { command: "start_calc_farm", description: "start_calc_farm" },
@@ -94,10 +87,7 @@ export class Telegram {
                     description: "current_calc_farm",
                 },
                 { command: "pool", description: "pool" },
-                { command: "test_msg", description: "test_msg" },
-                { command: "gas_polygon", description: "gas_polygon" },
                 { command: "withdraw", description: "withdraw" },
-                { command: "wallet", description: "wallet" },
                 { command: "reset_shield", description: "reset_shield" },
             ];
             await this.telegraf.telegram.setMyCommands(commands, {
