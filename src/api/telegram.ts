@@ -71,18 +71,20 @@ export class Telegram {
             );
       
             const commands = [
-                { command: "exit", description: "exit" },
+
                 { command: "start", description: "start" },
+                { command: "exit", description: "exit" },
                 { command: "rewards", description: "rewards" },
                 { command: "shield", description: "shield" },
                 { command: "stats", description: "stats" },
                 { command: "start_calc_farm", description: "start_calc_farm" },
-                { command: "config", description: "config" },
+                
                 { command: "stop_calc_farm", description: "stop_calc_farm" },
                 {
                     command: "current_calc_farm",
                     description: "current_calc_farm",
                 },
+                { command: "config", description: "config" },
                 { command: "pool", description: "pool" },
                 { command: "withdraw", description: "withdraw" },
             ];
