@@ -69,10 +69,7 @@ export class Telegram {
             this.telegraf?.command("pool", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramPool(ctx))
             );
-            this.telegraf?.command("reset_shield", (ctx: any) =>
-                this.checkChatId(ctx, () => ctx.scene.enter(SCENE_RESET_SHIELD))
-            );
-
+      
             const commands = [
                 { command: "exit", description: "exit" },
                 { command: "start", description: "start" },
@@ -88,7 +85,6 @@ export class Telegram {
                 },
                 { command: "pool", description: "pool" },
                 { command: "withdraw", description: "withdraw" },
-                { command: "reset_shield", description: "reset_shield" },
             ];
             await this.telegraf.telegram.setMyCommands(commands, {
                 language_code: "en",
