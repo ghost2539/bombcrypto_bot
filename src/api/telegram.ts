@@ -69,6 +69,9 @@ export class Telegram {
             this.telegraf?.command("pool", (ctx) =>
                 this.checkChatId(ctx, () => this.telegramPool(ctx))
             );
+                 this.telegraf?.command("gas_polygon", (ctx) =>
+            this.checkChatId(ctx, () => this.telegramAverageGasPolygon(ctx))
+         );
       
             const commands = [
 
@@ -76,6 +79,8 @@ export class Telegram {
                 { command: "exit", description: "exit" },
                 { command: "rewards", description: "rewards" },
                 { command: "shield", description: "shield" },
+                            { command: "gas_polygon", description: "gas_polygon" },
+
                 { command: "stats", description: "stats" },
                 { command: "start_calc_farm", description: "start_calc_farm" },
                 
